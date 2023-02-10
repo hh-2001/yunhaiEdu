@@ -25,7 +25,7 @@ import java.util.List;
 @Api(description = "上传文件Api")
 @RestController
 @RequestMapping("/eduservice/subject")
-@CrossOrigin
+//@CrossOrigin
 public class EduSubjectController {
 
     @Autowired

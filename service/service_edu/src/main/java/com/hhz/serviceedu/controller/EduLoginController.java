@@ -4,7 +4,7 @@ import com.hhz.commonutils.R;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+//@CrossOrigin
 @Api(description = "后台登录管理")
 @RestController
 @RequestMapping("/eduservice/user")
