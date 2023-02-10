@@ -11,6 +11,7 @@
         <module name="service_msm" />
         <module name="service_order" />
         <module name="service_cms" />
+        <module name="sql" />
         <module name="service_oss" />
         <module name="service_acl" />
         <module name="service_statistics" />
@@ -39,6 +40,7 @@
       <module name="service_statistics" target="1.8" />
       <module name="service_ucenter" target="1.8" />
       <module name="service_vod" target="1.8" />
+      <module name="sql" target="8" />
       <module name="yunhaiEdu" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -60,6 +62,7 @@
       <module name="service_statistics" options="-parameters" />
       <module name="service_ucenter" options="-parameters" />
       <module name="service_vod" options="-parameters" />
+      <module name="sql" options="-parameters" />
       <module name="yunhaiEdu" options="-parameters" />
     </option>
   </component>
