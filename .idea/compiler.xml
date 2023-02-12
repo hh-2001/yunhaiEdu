@@ -40,7 +40,7 @@
       <module name="service_statistics" target="1.8" />
       <module name="service_ucenter" target="1.8" />
       <module name="service_vod" target="1.8" />
-      <module name="sql" target="8" />
+      <module name="sql" target="1.8" />
       <module name="yunhaiEdu" target="1.8" />
     </bytecodeTargetLevel>
   </component>

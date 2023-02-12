@@ -20,6 +20,7 @@
         <option value="$PROJECT_DIR$/service/service_vod/pom.xml" />
         <option value="$PROJECT_DIR$/infrastructrue/pom.xml" />
         <option value="$PROJECT_DIR$/infrastructrue/api_gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/common/sql/pom.xml" />
       </list>
     </option>
   </component>
