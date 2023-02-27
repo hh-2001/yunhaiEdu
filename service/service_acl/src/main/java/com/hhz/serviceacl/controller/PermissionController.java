@@ -26,6 +26,10 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
+    /**
+     *
+     * @return
+     */
     //获取全部菜单
     @ApiOperation(value = "查询所有菜单")
     @GetMapping
@@ -48,6 +52,11 @@ public class PermissionController {
         return R.ok();
     }
 
+    /**
+     *
+     * @param roleId
+     * @return
+     */
     @ApiOperation(value = "根据角色获取菜单")
     @GetMapping("toAssign/{roleId}")
     public R toAssign(@PathVariable String roleId) {

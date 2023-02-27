@@ -37,6 +37,13 @@ public class UserController {
     @Autowired
     private RoleService roleService;
 
+    /**
+     *
+     * @param page
+     * @param limit
+     * @param userQueryVo
+     * @return
+     */
     @ApiOperation(value = "获取管理用户分页列表")
     @GetMapping("{page}/{limit}")
     public R index(

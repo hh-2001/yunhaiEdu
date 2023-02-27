@@ -12,6 +12,7 @@ public class EduLoginController {
     //login
     @PostMapping("login")
     public R login() {
+        System.out.println("后台登录");
         return R.ok().data("token","admin");
     }
     //info

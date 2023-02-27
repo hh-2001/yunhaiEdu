@@ -30,6 +30,13 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
+    /**
+     *
+     * @param page
+     * @param limit
+     * @param role
+     * @return
+     */
     @ApiOperation(value = "获取角色分页列表")
     @GetMapping("{page}/{limit}")
     public R index(

@@ -69,7 +69,7 @@
               <input type="checkbox" checked="checked" />我已阅读并同意<a
                 href="javascript:"
                 target="_blank"
-                >《谷粒学院购买 协议》</a
+                >《云海学院购买 协议》</a
               >
             </p></label
           >
