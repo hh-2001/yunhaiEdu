@@ -28,7 +28,10 @@ public class BannerFrontController {
     @Autowired
     private CrmBannerService bannerService;
 
-    //查询所有banner
+    /**
+     * 查询所有Banner
+     * @return
+     */
     @GetMapping("getAllBanner")
     public R getAllBanner() {
         List<CrmBanner> list = bannerService.selectAllBanner();
