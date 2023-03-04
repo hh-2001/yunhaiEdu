@@ -28,35 +28,55 @@ public class EduChapterController {
     @Autowired
     private EduChapterService chapterService;
 
-    //课程大纲列表,根据课程id进行查询
+    /**
+     * 课程大纲列表,根据课程id进行查询
+     * @param courseId 课程Id
+     * @return
+     */
     @GetMapping("getChapterVideo/{courseId}")
     public R getChapterVideo(@PathVariable String courseId) {
         List<ChapterVo> list = chapterService.getChapterVideoByCourseId(courseId);
         return R.ok().data("allChapterVideo",list);
     }
 
-    //添加章节
+    /**
+     * 添加章节
+     * @param eduChapter
+     * @return
+     */
     @PostMapping("addChapter")
     public R addChapter(@RequestBody EduChapter eduChapter) {
         chapterService.save(eduChapter);
         return R.ok();
     }
 
-    //根据章节id查询
+    /**
+     * 根据章节id查询
+     * @param chapterId 章节Id
+     * @return
+     */
     @GetMapping("getChapterInfo/{chapterId}")
     public R getChapterInfo(@PathVariable String chapterId) {
         EduChapter eduChapter = chapterService.getById(chapterId);
         return R.ok().data("chapter",eduChapter);
     }
 
-    //修改章节
+    /**
+     * 修改章节
+     * @param eduChapter 课程章节实体
+     * @return
+     */
     @PostMapping("updateChapter")
     public R updateChapter(@RequestBody EduChapter eduChapter) {
         chapterService.updateById(eduChapter);
         return R.ok();
     }
 
-    //删除的方法
+    /**
+     * 删除的方法
+     * @param chapterId 章节Id
+     * @return
+     */
     @DeleteMapping("{chapterId}")
     public R deleteChapter(@PathVariable String chapterId) {
         boolean flag = chapterService.deleteChapter(chapterId);

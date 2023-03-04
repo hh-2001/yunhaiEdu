@@ -9,15 +9,22 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/eduservice/user")
 public class EduLoginController {
-    //login
+    /**
+     * 登录
+     * @return
+     */
     @PostMapping("login")
     public R login() {
         System.out.println("后台登录");
-        return R.ok().data("token","admin");
+        return R.ok().data("token", "admin");
     }
-    //info
+
+    /**
+     * 登录信息
+     * @return
+     */
     @GetMapping("info")
     public R info() {
-        return R.ok().data("roles","[admin]").data("name","admin").data("avatar","https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        return R.ok().data("roles", "[admin]").data("name", "admin").data("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
     }
 }

@@ -28,18 +28,25 @@ public class EduVideoController {
     @Autowired
     private EduVideoService videoService;
 
-    //注入vodClient
     @Autowired
     private VodClient vodClient;
 
-    //添加小节
+    /**
+     * 添加小节
+     * @param eduVideo
+     * @return
+     */
     @PostMapping("addVideo")
     public R addVideo(@RequestBody EduVideo eduVideo) {
         videoService.save(eduVideo);
         return R.ok();
     }
 
-    //删除小节，删除对应阿里云视频
+    /**
+     * 删除小节，删除对应阿里云视频文件
+     * @param id 小节Id
+     * @return
+     */
     @DeleteMapping("{id}")
     public R deleteVideo(@PathVariable String id) {
         //根据小节id获取视频id，调用方法实现视频删除
@@ -59,6 +66,5 @@ public class EduVideoController {
     }
 
     //修改小节 TODO
-
 }
 

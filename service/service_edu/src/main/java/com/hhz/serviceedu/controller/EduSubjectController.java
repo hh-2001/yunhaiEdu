@@ -31,8 +31,12 @@ public class EduSubjectController {
     @Autowired
     private EduSubjectService subjectService;
 
-    //添加课程分类
-    //获取上传过来文件，把文件内容读取出来
+    /**
+     * 添加课程分类
+     * 获取上传过来文件，把文件内容读取出来
+     * @param file 文件
+     * @return
+     */
     @PostMapping("addSubject")
     public R addSubject(MultipartFile file) {
         //上传过来excel文件
@@ -40,7 +44,10 @@ public class EduSubjectController {
         return R.ok();
     }
 
-    //课程分类列表（树形）
+    /**
+     * 课程分类列表
+     * @return
+     */
     @GetMapping("getAllSubject")
     public R getAllSubject() {
         //list集合泛型是一级分类
