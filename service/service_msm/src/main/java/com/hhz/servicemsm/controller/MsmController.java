@@ -23,7 +23,11 @@ public class MsmController {
     @Autowired
     private RedisTemplate<String,String> redisTemplate;
 
-    //发送短信的方法
+    /**
+     * 发送短信
+     * @param phone 电话号码
+     * @return
+     */
     @GetMapping("send/{phone}")
     public R sendMsm(@PathVariable String phone) {
         //1 从redis获取验证码，如果获取到直接返回

@@ -27,33 +27,50 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    //1 生成订单的方法
+    /**
+     * 生成订单
+     *
+     * @param courseId
+     * @param request
+     * @return
+     */
     @PostMapping("createOrder/{courseId}")
     public R saveOrder(@PathVariable String courseId, HttpServletRequest request) {
         //创建订单，返回订单号
         String orderNo =
-                orderService.createOrders(courseId,JwtUtils.getMemberIdByJwtToken(request));
-        return R.ok().data("orderId",orderNo);
+                orderService.createOrders(courseId, JwtUtils.getMemberIdByJwtToken(request));
+        return R.ok().data("orderId", orderNo);
     }
 
-    //2 根据订单id查询订单信息
+    /**
+     * 查询订单信息
+     *
+     * @param orderId 订单Id
+     * @return
+     */
     @GetMapping("getOrderInfo/{orderId}")
     public R getOrderInfo(@PathVariable String orderId) {
         QueryWrapper<Order> wrapper = new QueryWrapper<>();
-        wrapper.eq("order_no",orderId);
+        wrapper.eq("order_no", orderId);
         Order order = orderService.getOne(wrapper);
-        return R.ok().data("item",order);
+        return R.ok().data("item", order);
     }
 
-    //根据课程id和用户id查询订单表中订单状态
+    /**
+     * 查询订单状态
+     *
+     * @param courseId 课程Id
+     * @param memberId 用户Id
+     * @return
+     */
     @GetMapping("isBuyCourse/{courseId}/{memberId}")
-    public boolean isBuyCourse(@PathVariable String courseId,@PathVariable String memberId) {
+    public boolean isBuyCourse(@PathVariable String courseId, @PathVariable String memberId) {
         QueryWrapper<Order> wrapper = new QueryWrapper<>();
-        wrapper.eq("course_id",courseId);
-        wrapper.eq("member_id",memberId);
-        wrapper.eq("status",1);//支付状态 1代表已经支付
+        wrapper.eq("course_id", courseId);
+        wrapper.eq("member_id", memberId);
+        wrapper.eq("status", 1);//支付状态 1代表已经支付
         int count = orderService.count(wrapper);
-        if(count>0) { //已经支付
+        if (count > 0) { //已经支付
             return true;
         } else {
             return false;
