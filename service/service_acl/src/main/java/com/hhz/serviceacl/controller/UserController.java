@@ -38,7 +38,7 @@ public class UserController {
     private RoleService roleService;
 
     /**
-     *
+     *获取管理用户分页列表
      * @param page
      * @param limit
      * @param userQueryVo
@@ -65,6 +65,11 @@ public class UserController {
         return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
     }
 
+    /**
+     * 新增管理用户
+     * @param user 用户实体
+     * @return
+     */
     @ApiOperation(value = "新增管理用户")
     @PostMapping("save")
     public R save(@RequestBody User user) {
@@ -73,6 +78,11 @@ public class UserController {
         return R.ok();
     }
 
+    /**
+     * 修改管理用户
+     * @param user 用户实体
+     * @return
+     */
     @ApiOperation(value = "修改管理用户")
     @PutMapping("update")
     public R updateById(@RequestBody User user) {
@@ -80,6 +90,11 @@ public class UserController {
         return R.ok();
     }
 
+    /**
+     * 删除管理用户
+     * @param id 管理用户Id
+     * @return
+     */
     @ApiOperation(value = "删除管理用户")
     @DeleteMapping("remove/{id}")
     public R remove(@PathVariable String id) {
@@ -87,6 +102,11 @@ public class UserController {
         return R.ok();
     }
 
+    /**
+     * 根据Id删除管理用户
+     * @param idList 用户Id列表
+     * @return
+     */
     @ApiOperation(value = "根据id列表删除管理用户")
     @DeleteMapping("batchRemove")
     public R batchRemove(@RequestBody List<String> idList) {
@@ -94,6 +114,11 @@ public class UserController {
         return R.ok();
     }
 
+    /**
+     * 根据用户Id获取角色数据
+     * @param userId 用户Id
+     * @return
+     */
     @ApiOperation(value = "根据用户获取角色数据")
     @GetMapping("/toAssign/{userId}")
     public R toAssign(@PathVariable String userId) {
@@ -101,6 +126,12 @@ public class UserController {
         return R.ok().data(roleMap);
     }
 
+    /**
+     * 根据用户Id分配角色
+     * @param userId 用户Id
+     * @param roleId 角色Id列表
+     * @return
+     */
     @ApiOperation(value = "根据用户分配角色")
     @PostMapping("/doAssign")
     public R doAssign(@RequestParam String userId,@RequestParam String[] roleId) {

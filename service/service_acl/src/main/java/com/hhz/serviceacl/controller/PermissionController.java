@@ -27,10 +27,9 @@ public class PermissionController {
     private PermissionService permissionService;
 
     /**
-     *
+     * 获取全部菜单
      * @return
      */
-    //获取全部菜单
     @ApiOperation(value = "查询所有菜单")
     @GetMapping
     public R indexAllPermission() {
@@ -38,6 +37,11 @@ public class PermissionController {
         return R.ok().data("children",list);
     }
 
+    /**
+     * 递归删除菜单
+     * @param id 菜单Id
+     * @return
+     */
     @ApiOperation(value = "递归删除菜单")
     @DeleteMapping("remove/{id}")
     public R remove(@PathVariable String id) {
@@ -45,6 +49,12 @@ public class PermissionController {
         return R.ok();
     }
 
+    /**
+     * 角色分配权限
+     * @param roleId 角色Id
+     * @param permissionId 菜单Id(即是权限)
+     * @return
+     */
     @ApiOperation(value = "给角色分配权限")
     @PostMapping("/doAssign")
     public R doAssign(String roleId,String[] permissionId) {
@@ -53,8 +63,8 @@ public class PermissionController {
     }
 
     /**
-     *
-     * @param roleId
+     * 根据角色获取菜单
+     * @param roleId 角色Id
      * @return
      */
     @ApiOperation(value = "根据角色获取菜单")
@@ -64,8 +74,11 @@ public class PermissionController {
         return R.ok().data("children", list);
     }
 
-
-
+    /**
+     * 新增菜单
+     * @param permission 菜单实体
+     * @return
+     */
     @ApiOperation(value = "新增菜单")
     @PostMapping("save")
     public R save(@RequestBody Permission permission) {
@@ -73,6 +86,11 @@ public class PermissionController {
         return R.ok();
     }
 
+    /**
+     * 修改菜单
+     * @param permission 菜单实体
+     * @return
+     */
     @ApiOperation(value = "修改菜单")
     @PutMapping("update")
     public R updateById(@RequestBody Permission permission) {
