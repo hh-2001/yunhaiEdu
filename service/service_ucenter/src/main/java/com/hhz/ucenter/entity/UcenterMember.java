@@ -45,7 +45,7 @@ public class UcenterMember implements Serializable {
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
-    @ApiModelProperty(value = "性别 1 女，2 男")
+    @ApiModelProperty(value = "性别 1 男，2 女")
     private Integer sex;
 
     @ApiModelProperty(value = "年龄")
@@ -56,6 +56,9 @@ public class UcenterMember implements Serializable {
 
     @ApiModelProperty(value = "用户签名")
     private String sign;
+
+    @ApiModelProperty(value = "电子邮箱")
+    private String eMail;
 
     @ApiModelProperty(value = "是否禁用 1（true）已禁用，  0（false）未禁用")
     private Boolean isDisabled;

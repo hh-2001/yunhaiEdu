@@ -1,30 +1,25 @@
-.<template>
+<template>
   <div class="app-container">
     <el-form label-width="120px">
       <el-form-item label="幻灯片名称">
         <el-input v-model="banner.title" />
       </el-form-item>
       <el-form-item label="幻灯片排序">
-        <el-input-number
-          v-model="banner.sort"
-          controls-position="right"
-          :min="0"
-        />
+        <el-input-number v-model="banner.sort" controls-position="right" :min="0" />
       </el-form-item>
-      <el-form-item label="幻灯片url">
-        <el-input v-model="banner.imageUrl" />
+      <!-- 课程封面 TODO -->
+      <el-form-item label="幻灯片图片">
+        <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"
+          :action="BASE_API + '/eduoss/fileoss/upload'" class="avatar-uploader">
+          <img :src="banner.imageUrl" />
+        </el-upload>
       </el-form-item>
-      <el-form-item label="link_url">
+      <el-form-item label="所属模块 如:/index">
         <el-input v-model="banner.linkUrl" :rows="10" type="textarea" />
       </el-form-item>
 
       <el-form-item>
-        <el-button
-          :disabled="saveBtnDisabled"
-          type="primary"
-          @click="saveOrUpdate"
-          >保存</el-button
-        >
+        <el-button :disabled="saveBtnDisabled" type="primary" @click="saveOrUpdate">保存</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -79,7 +74,22 @@ export default {
         this.$router.push({ path: "/banner/list" });
       });
     },
-
+    //上传封面成功调用的方法
+    handleAvatarSuccess(resp, file) {
+      this.banner.imageUrl = resp.data.url;
+    },
+    //上传之前要调用的方法
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
     // 保存
     saveData() {
       banner.saveBanner(this.banner).then((resp) => {
@@ -125,4 +135,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.avatar-uploader img{
+  width: 200px;
+  height: 200px;
+  border-radius: 30%;
+}
+</style>

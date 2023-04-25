@@ -20,4 +20,7 @@ public interface StatisticsDailyService extends IService<StatisticsDaily> {
 
     //图表显示，返回两部分数据，日期json数组，数量json数组
     Map<String, Object> getShowData(String type, String begin, String end);
+
+    //图表显示，返回两部分数据，日期json数组，数量json数组
+    Map<String, Object> getShowDataByType(String type);
 }

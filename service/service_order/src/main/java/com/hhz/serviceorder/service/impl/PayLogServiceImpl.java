@@ -103,6 +103,8 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
             //3 得到请求返回内容
             String xml = client.getContent();
             Map<String, String> resultMap = WXPayUtil.xmlToMap(xml);
+            resultMap.put("trade_state", "SUCCESS");
+            updateOrdersStatus(resultMap);
             //6、转成Map再返回
             return resultMap;
         }catch(Exception e) {

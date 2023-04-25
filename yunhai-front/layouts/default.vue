@@ -76,10 +76,10 @@
                 <input
                   type="text"
                   placeholder="输入你想学的课程"
-                  name="queryCourse.courseName"
-                  value
+                  name="queryCourse.name"
+                  v-bind:value="queryCourse.name"
                 />
-                <button type="submit" class="s-btn">
+                <button class="s-btn" @click="findCourse()">
                   <em class="icon18">&nbsp;</em>
                 </button>
               </label>
@@ -161,7 +161,7 @@ import '~/assets/css/swiper-3.3.1.min.css'
 import "~/assets/css/pages-weixinpay.css"
 import cookie from "js-cookie";
 import loginApi from "@/api/login";
-
+import courseApi from "@/api/course";
 export default {
   data() {
     return {
@@ -174,6 +174,7 @@ export default {
         nickname: "",
         sex: "",
       },
+      queryCourse:{}
     };
   },
   created() {
@@ -217,6 +218,12 @@ export default {
         this.loginInfo = JSON.parse(userStr);
       }
     },
+    findCourse(){
+      courseApi.getConditionPage(1,10,queryCourse).then(resp => {
+        console.log(resp.data.items)
+        this.$router.push({ path: "/course" });
+      })
+    }
   },
 };
 </script>

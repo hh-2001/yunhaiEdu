@@ -1,6 +1,7 @@
 package com.hhz.serviceacl.controller;
 
 
+import com.hhz.commonutils.JwtUtils;
 import com.hhz.serviceacl.entity.User;
 import com.hhz.serviceacl.service.RoleService;
 import com.hhz.serviceacl.service.UserService;
@@ -15,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -51,7 +54,7 @@ public class UserController {
             @PathVariable Long page,
             @ApiParam(name = "limit", value = "每页记录数", required = true)
             @PathVariable Long limit,
-            @ApiParam(name = "courseQuery", value = "查询对象", required = false)
+            @ApiParam(name = "userQueryVo", value = "查询对象", required = false)
              User userQueryVo) {
         Page<User> pageParam = new Page<>(page, limit);
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -60,8 +63,17 @@ public class UserController {
         }
 
         IPage<User> pageModel = userService.page(pageParam, wrapper);
-        //TODO items未统一返回格式
         return R.ok().data("items", pageModel.getRecords()).data("total", pageModel.getTotal());
+    }
+
+    @ApiOperation(value = "根据Id获取对应的用户信息")
+    @GetMapping("/get/{id}")
+    public R getOne(@PathVariable String id){
+        User user = userService.getById(id);
+        if (Objects.isNull(user)){
+            return R.error().message("没有该用户信息");
+        }
+        return R.ok().data("item", user);
     }
 
     /**

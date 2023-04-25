@@ -2,6 +2,7 @@ package com.hhz.serviceacl.mapper;
 
 import com.hhz.serviceacl.entity.RolePermission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RolePermissionMapper extends BaseMapper<RolePermission> {
 
+    int removeByRoleId(@Param("roleId") String roleId);
 }

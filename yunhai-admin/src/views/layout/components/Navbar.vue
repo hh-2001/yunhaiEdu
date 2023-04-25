@@ -10,7 +10,12 @@
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
         <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
-            首页
+            主页
+          </el-dropdown-item>
+        </router-link>
+        <router-link class="inlineBlock" to="/user">
+          <el-dropdown-item divided>
+            个人信息
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>

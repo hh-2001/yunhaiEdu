@@ -47,6 +47,7 @@ public class PayLogController {
      */
     @GetMapping("queryPayStatus/{orderNo}")
     public R queryPayStatus(@PathVariable String orderNo) {
+
         Map<String, String> map = payLogService.queryPayStatus(orderNo);
         System.out.println("*****查询订单状态map集合:" + map);
         if (map == null) {

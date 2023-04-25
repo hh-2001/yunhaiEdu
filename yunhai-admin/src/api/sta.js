@@ -14,6 +14,12 @@ export default {
             url: `/staservice/daily/showData/${searchObj.type}/${searchObj.begin}/${searchObj.end}`,
             method: 'get'
         })
+    },
+    //图表显示
+    getShowDataByType(searchObj) {
+        return request({
+            url: `/staservice/daily/showDataByType/${searchObj.type}`,
+            method: 'get'
+        })
     }
-
 }

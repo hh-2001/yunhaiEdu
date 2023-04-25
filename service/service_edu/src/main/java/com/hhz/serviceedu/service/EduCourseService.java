@@ -1,6 +1,9 @@
 package com.hhz.serviceedu.service;
 
+import com.hhz.serviceedu.controller.front.CourseFrontController;
 import com.hhz.serviceedu.entity.EduCourse;
+import com.hhz.serviceedu.entity.EduCourseCollect;
+import com.hhz.serviceedu.entity.frontvo.CourseCollectVo;
 import com.hhz.serviceedu.entity.frontvo.CourseFrontVo;
 import com.hhz.serviceedu.entity.frontvo.CourseWebVo;
 import com.hhz.serviceedu.entity.vo.CourseInfoVo;
@@ -41,4 +44,10 @@ public interface EduCourseService extends IService<EduCourse> {
 
     //根据课程id，编写sql语句查询课程信息
     CourseWebVo getBaseCourseInfo(String courseId);
+
+    //收藏课程
+    Boolean saveCollect(EduCourseCollect courseCollect);
+
+    //获取对应会员收藏的课程
+    List<CourseCollectVo> getCourseCollect(String memberId);
 }

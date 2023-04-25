@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface RolePermissionService extends IService<RolePermission> {
 
+    int removeByRoleId(String roleId);
 }

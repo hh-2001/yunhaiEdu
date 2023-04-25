@@ -56,10 +56,11 @@ public class IndexServiceImpl implements IndexService {
         //根据用户id获取操作权限值
         List<String> permissionValueList = permissionService.selectPermissionValueByUserId(user.getId());
         redisTemplate.opsForValue().set(username, permissionValueList);
-
+        user.setPassword(null);
         result.put("name", user.getUsername());
-        result.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        result.put("avatar", user.getAvatar());
         result.put("roles", roleNameList);
+        result.put("item", user);
         result.put("permissionValueList", permissionValueList);
         return result;
     }

@@ -5,7 +5,9 @@ import com.hhz.commonutils.R;
 import com.hhz.commonutils.ordervo.CourseWebVoOrder;
 import com.hhz.serviceedu.client.OrdersClient;
 import com.hhz.serviceedu.entity.EduCourse;
+import com.hhz.serviceedu.entity.EduCourseCollect;
 import com.hhz.serviceedu.entity.chapter.ChapterVo;
+import com.hhz.serviceedu.entity.frontvo.CourseCollectVo;
 import com.hhz.serviceedu.entity.frontvo.CourseFrontVo;
 import com.hhz.serviceedu.entity.frontvo.CourseWebVo;
 import com.hhz.serviceedu.service.EduChapterService;
@@ -13,6 +15,7 @@ import com.hhz.serviceedu.service.EduCourseService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +67,25 @@ public class CourseFrontController {
         CourseWebVoOrder courseWebVoOrder = new CourseWebVoOrder();
         BeanUtils.copyProperties(courseInfo,courseWebVoOrder);
         return courseWebVoOrder;
+    }
+
+    //收藏课程
+    @GetMapping("saveCollect/{courseId}")
+    public R saveCollect(@PathVariable String courseId, HttpServletRequest request){
+        String memberId = JwtUtils.getMemberIdByJwtToken(request);
+        Boolean aBoolean = courseService.saveCollect(new EduCourseCollect(courseId,memberId));
+        if (aBoolean){
+            return R.ok();
+        }
+        return R.error();
+    }
+
+    @GetMapping("getCourseCollect")
+    public R getCourseCollect(HttpServletRequest request){
+        String memberId = JwtUtils.getMemberIdByJwtToken(request);
+
+        List<CourseCollectVo> list = courseService.getCourseCollect(memberId);
+        return R.ok().data("items", list);
     }
 }
 

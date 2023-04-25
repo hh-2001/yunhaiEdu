@@ -51,5 +51,13 @@ public class StatisticsDailyController {
         System.out.println("生成结果"+map);
         return R.ok().data(map);
     }
+
+    @GetMapping("showDataByType/{type}")
+    public R showDataByType(@PathVariable String type) {
+        System.out.println("类型" + type);
+        Map<String, Object> map = staService.getShowDataByType(type);
+        System.out.println("生成结果"+map);
+        return R.ok().data(map);
+    }
 }
 

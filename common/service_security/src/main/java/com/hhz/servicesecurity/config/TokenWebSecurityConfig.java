@@ -73,14 +73,11 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 配置哪些请求不拦截
      * @param web
-     * @throws Exception
      */
     @Override
-    public void configure(WebSecurity web){
-//        web.ignoring().antMatchers("/api/**",
-//                "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**"
-//               );
-        web.ignoring().antMatchers("/*/**"
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/api/**",
+                "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**"
         );
     }
 }

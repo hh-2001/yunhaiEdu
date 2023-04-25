@@ -28,4 +28,35 @@
 		            LEFT OUTER JOIN edu_subject es2 ON ec.subject_id=es2.id
         WHERE ec.id=#{courseId}
     </select>
+
+    <insert id="saveCollect">
+        insert into edu_course_collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="id != null">id,</if>
+        <if test="courseId != null">course_id,</if>
+        <if test="memberId != null">member_id,</if>
+        <if test="gmtCreate != null">gmt_create,</if>
+        <if test="gmtModified != null">gmt_modified,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="courseId != null">#{courseId},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+        </trim>
+    </insert>
+
+    <resultMap id="courseCollect" type="com.hhz.serviceedu.entity.EduCourseCollect">
+        <result property="courseId" column="course_id"/>
+        <result property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="delete" column="is_deleted"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+    </resultMap>
+
+    <select id="getCourseCollect" parameterType="String" resultMap="courseCollect">
+        select * from edu_course_collect where member_id=#{memberId} and is_deleted=0
+    </select>
 </mapper>

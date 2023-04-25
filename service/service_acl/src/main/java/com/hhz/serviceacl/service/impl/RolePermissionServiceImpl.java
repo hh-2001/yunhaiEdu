@@ -1,5 +1,7 @@
 package com.hhz.serviceacl.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hhz.serviceacl.entity.RolePermission;
 import com.hhz.serviceacl.mapper.RolePermissionMapper;
 import com.hhz.serviceacl.service.RolePermissionService;
@@ -17,4 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper, RolePermission> implements RolePermissionService {
 
+    @Override
+    public int removeByRoleId(String roleId){
+
+        return baseMapper.removeByRoleId(roleId);
+    }
 }

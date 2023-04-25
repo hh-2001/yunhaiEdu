@@ -23,4 +23,11 @@ export default{
             method: 'get'
         })
     },
+    //收藏课程
+    saveCollect(courseId){
+        return request({
+            url: `eduservice/coursefront/saveCollect/${courseId}`,
+            method: 'get'
+        })
+    }
 }

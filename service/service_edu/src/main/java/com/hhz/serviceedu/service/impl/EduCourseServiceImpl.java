@@ -1,17 +1,18 @@
 package com.hhz.serviceedu.service.impl;
 
 import com.hhz.base.exceptionhandler.EduException;
+import com.hhz.serviceedu.controller.front.CourseFrontController;
 import com.hhz.serviceedu.entity.EduCourse;
+import com.hhz.serviceedu.entity.EduCourseCollect;
 import com.hhz.serviceedu.entity.EduCourseDescription;
+import com.hhz.serviceedu.entity.EduTeacher;
+import com.hhz.serviceedu.entity.frontvo.CourseCollectVo;
 import com.hhz.serviceedu.entity.frontvo.CourseFrontVo;
 import com.hhz.serviceedu.entity.frontvo.CourseWebVo;
 import com.hhz.serviceedu.entity.vo.CourseInfoVo;
 import com.hhz.serviceedu.entity.vo.CoursePublishVo;
 import com.hhz.serviceedu.mapper.EduCourseMapper;
-import com.hhz.serviceedu.service.EduChapterService;
-import com.hhz.serviceedu.service.EduCourseDescriptionService;
-import com.hhz.serviceedu.service.EduCourseService;
-import com.hhz.serviceedu.service.EduVideoService;
+import com.hhz.serviceedu.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -22,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.prefs.BackingStoreException;
 
 /**
@@ -49,6 +47,9 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
 
     @Autowired
     private EduChapterService chapterService;
+
+    @Autowired
+    private EduTeacherService eduTeacherService;
 
     //添加课程基本信息的方法
     @Override
@@ -189,6 +190,26 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
     @Override
     public CourseWebVo getBaseCourseInfo(String courseId) {
         return baseMapper.getBaseCourseInfo(courseId);
+    }
+
+    @Override
+    public Boolean saveCollect(EduCourseCollect courseCollect) {
+
+        return baseMapper.saveCollect(courseCollect) > 0;
+    }
+
+    @Override
+    public List<CourseCollectVo> getCourseCollect(String memberId) {
+        ArrayList<CourseCollectVo> list = new ArrayList<>();
+
+        List<EduCourseCollect> collect = baseMapper.getCourseCollect(memberId);
+        for (EduCourseCollect courseCollect : collect) {
+            EduCourse eduCourse = baseMapper.selectById(courseCollect.getCourseId());
+            EduTeacher teacher = eduTeacherService.getById(eduCourse.getTeacherId());
+            CourseCollectVo collectVo = new CourseCollectVo(courseCollect, eduCourse, teacher);
+            list.add(collectVo);
+        }
+        return list;
     }
 
 }

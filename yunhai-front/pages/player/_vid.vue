@@ -48,7 +48,7 @@ export default {
         width: "100%",
         height: "500px",
         // 以下可选设置
-        cover: "https://yuhaiedu.oss-cn-hongkong.aliyuncs.com/index.jpg", // 封面
+        cover: "https://yuhaiedu.oss-cn-hongkong.aliyuncs.com/timg.gif", // 封面
         qualitySort: "asc", // 清晰度排序
 
         mediaType: "video", // 返回音频还是视频

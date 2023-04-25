@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 后台banner管理接口
@@ -62,8 +64,10 @@ public class BannerAdminController {
         //排序
         wrapper.orderByDesc("gmt_create");
 
-        IPage<CrmBanner> bannerIPage = bannerService.page(pageBanner, wrapper);
-        return R.ok().data("items",bannerIPage.getRecords()).data("total",bannerIPage.getTotal());
+        bannerService.page(pageBanner, wrapper);
+        long total = pageBanner.getTotal();
+        List<CrmBanner> records = pageBanner.getRecords();
+        return R.ok().data("items",records).data("total",total);
     }
 
     /**

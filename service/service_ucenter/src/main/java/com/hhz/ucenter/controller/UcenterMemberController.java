@@ -2,16 +2,19 @@ package com.hhz.ucenter.controller;
 
 
 import com.hhz.commonutils.JwtUtils;
+import com.hhz.commonutils.MD5;
 import com.hhz.commonutils.R;
 import com.hhz.commonutils.ordervo.UcenterMemberOrder;
 import com.hhz.ucenter.entity.UcenterMember;
 import com.hhz.ucenter.entity.vo.RegisterVo;
 import com.hhz.ucenter.service.UcenterMemberService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -37,7 +40,6 @@ public class UcenterMemberController {
      */
     @PostMapping("login")
     public R loginUser(@RequestBody UcenterMember member) {
-        System.out.println(member.toString());
         //member对象封装手机号和密码
         //调用service方法实现登录
         //返回token值，使用jwt生成
@@ -53,7 +55,6 @@ public class UcenterMemberController {
      */
     @PostMapping("register")
     public R registerUser(@RequestBody RegisterVo registerVo) {
-        System.out.println("表单数据: "+registerVo.toString());
         memberService.register(registerVo);
         return R.ok();
     }
@@ -70,6 +71,7 @@ public class UcenterMemberController {
         String memberId = JwtUtils.getMemberIdByJwtToken(request);
         //查询数据库根据用户id获取用户信息
         UcenterMember member = memberService.getById(memberId);
+        member.setPassword(null);
         return R.ok().data("item", member);
     }
 
@@ -98,6 +100,29 @@ public class UcenterMemberController {
     public R countRegister(@PathVariable String day) {
         Integer count = memberService.countRegisterDay(day);
         return R.ok().data("countRegister", count);
+    }
+
+    @PutMapping("{oldPassword}")
+    public R updateMember(HttpServletRequest request, @RequestBody UcenterMember member, @PathVariable("oldPassword") String oldPassword){
+        String memberId = JwtUtils.getMemberIdByJwtToken(request);
+        member.setId(memberId);
+        System.out.println(member);
+        boolean b = false;
+        if (StringUtils.isNotBlank(member.getPassword())) {
+            UcenterMember ucenterMember = memberService.getById(member);
+            String pass = MD5.encrypt(oldPassword);
+            if(ucenterMember.getPassword().equals(pass)){
+                member.setPassword(MD5.encrypt(member.getPassword()));
+                b = memberService.updateById(member);
+                return R.ok();
+            }
+            return R.error().message("旧密码错误");
+        }
+        b = memberService.updateById(member);
+        if (b){
+            return R.ok();
+        }
+        return R.error().message("修改失败");
     }
 }
 

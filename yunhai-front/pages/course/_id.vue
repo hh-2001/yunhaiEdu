@@ -14,13 +14,7 @@
       <div>
         <article class="c-v-pic-wrap" style="height: 357px">
           <section class="p-h-video-box" id="videoPlay">
-            <img
-              :src="course.cover"
-              :alt="course.title"
-              class="dis c-v-pic"
-              height="355px"
-              width="630px"
-            />
+            <img :src="course.cover" :alt="course.title" class="dis c-v-pic" height="355px" width="630px" />
           </section>
         </article>
         <aside class="c-attr-wrap">
@@ -30,14 +24,10 @@
             </h2>
             <section class="c-attr-jg">
               <span class="c-fff">价格：</span>
-              <b class="c-yellow" style="font-size: 24px"
-                >￥{{ course.price }}</b
-              >
+              <b class="c-yellow" style="font-size: 24px">￥{{ course.price }}</b>
             </section>
             <section class="c-attr-mt c-attr-undis">
-              <span class="c-fff fsize14"
-                >主讲： {{ course.teacherName }}&nbsp;&nbsp;&nbsp;</span
-              >
+              <span class="c-fff fsize14">主讲： {{ course.teacherName }}&nbsp;&nbsp;&nbsp;</span>
             </section>
             <section class="c-attr-mt of">
               <span class="ml10 vam">
@@ -45,22 +35,11 @@
                 <a class="c-fff vam" title="收藏" href="#">收藏</a>
               </span>
             </section>
-            <section class="c-attr-mt" v-if="isbuyCourse && Number(course.price) === 0">
-              <a
-                href="#"
-                title="立即观看"
-                class="comm-btn c-btn-3"
-                >立 即 观 看</a
-              >
+            <section class="c-attr-mt" v-if="isbuyCourse || Number(course.price) == 0">
+              <a @click="toPlay(chapterList[0].children[0].videoSourceId)" href="#" title="立即观看" class="comm-btn c-btn-3">立 即 观 看</a>
             </section>
             <section class="c-attr-mt" v-else>
-              <a
-                @click="createOrders()"
-                href="#"
-                title="立即购买"
-                class="comm-btn c-btn-3"
-                >立 即 购 买</a
-              >
+              <a @click="createOrders()" href="#" title="立即购买" class="comm-btn c-btn-3">立 即 购 买</a>
             </section>
           </section>
         </aside>
@@ -100,10 +79,7 @@
           <section class="mr30">
             <div class="i-box">
               <div>
-                <section
-                  id="c-i-tabTitle"
-                  class="c-infor-tabTitle c-tab- title"
-                >
+                <section id="c-i-tabTitle" class="c-infor-tabTitle c-tab- title">
                   <a name="c-i" class="current" title="课程详情">课 程 详 情</a>
                 </section>
               </div>
@@ -130,35 +106,17 @@
                       <menu id="lh-menu" class="lh-menu mt10 mr10">
                         <ul>
                           <!-- 文件目录 -->
-                          <li
-                            class="lh-menu-stair"
-                            v-for="chapter in chapterList"
-                            :key="chapter.id"
-                          >
-                            <a
-                              href="javascript: void(0)"
-                              :title="chapter.title"
-                              class="current-1"
-                            >
-                              <em class="lh-menu-i-1 icon18 mr10"></em
-                              >{{ chapter.title }}
+                          <li class="lh-menu-stair" v-for="chapter in chapterList" :key="chapter.id">
+                            <a href="javascript: void(0)" :title="chapter.title" class="current-1">
+                              <em class="lh-menu-i-1 icon18 mr10"></em>{{ chapter.title }}
                             </a>
                             <ol class="lh-menu-ol" style="display: block">
-                              <li
-                                class="lh-menu-second ml30"
-                                v-for="video in chapter.children"
-                                :key="video.id"
-                              >
-                                <a
-                                  @click="toPlay(video.videoSourceId)"
-                                  href="#"
-                                  target="_blank"
-                                >
+                              <li class="lh-menu-second ml30" v-for="video in chapter.children" :key="video.id">
+                                <a @click="toPlay(video.videoSourceId)" href="#" target="_blank">
                                   <span class="fr" v-if="video.free === true">
                                     <i class="free-icon vam mr10">免费试听</i>
                                   </span>
-                                  <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em
-                                  >{{ video.title }}
+                                  <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em>{{ video.title }}
                                 </a>
                               </li>
                             </ol>
@@ -213,36 +171,16 @@
             <ul>
               <li class="unBr">
                 <aside class="noter-pic">
-                  <img
-                    width="50"
-                    height="50"
-                    class="picImg"
-                    src="~/assets/img/avatar-boy.gif"
-                  />
+                  <img width="50" height="50" class="picImg" src="~/assets/img/avatar-boy.gif" />
                 </aside>
                 <div class="of">
                   <section class="n-reply-wrap">
                     <fieldset>
-                      <textarea
-                        name=""
-                        v-model="comment.content"
-                        placeholder="输入您要评论的文字"
-                        id="commentContent"
-                      ></textarea>
+                      <textarea name="" v-model="comment.content" placeholder="输入您要评论的文字" id="commentContent"></textarea>
                     </fieldset>
                     <p class="of mt5 tar pl10 pr10">
-                      <span class="fl"
-                        ><tt
-                          class="c-red commentContentmeg"
-                          style="display: none"
-                        ></tt
-                      ></span>
-                      <input
-                        type="button"
-                        @click="addComment()"
-                        value="回复"
-                        class="lh-reply-btn"
-                      />
+                      <span class="fl"><tt class="c-red commentContentmeg" style="display: none"></tt></span>
+                      <input type="button" @click="addComment()" value="回复" class="lh-reply-btn" />
                     </p>
                   </section>
                 </div>
@@ -254,28 +192,23 @@
               <ul class="pr10">
                 <li v-for="comment in data.items" :key="comment.id">
                   <aside class="noter-pic">
-                    <img
-                      width="50"
-                      height="50"
-                      class="picImg"
-                      :src="comment.avatar"
-                    />
+                    <img width="50" height="50" class="picImg" :src="comment.avatar" />
                   </aside>
                   <div class="of">
                     <span class="fl">
                       <font class="fsize12 c-blue">{{ comment.nickname }}</font>
-                      <font class="fsize12 c-999 ml5">评论：</font></span
-                    >
+                      <font class="fsize12 c-999 ml5">评论：</font>
+                    </span>
                   </div>
                   <div class="noter-txt mt5">
                     <p>{{ comment.content }}</p>
                   </div>
                   <div class="of mt5">
-                    <span class="fr"
-                      ><font class="fsize12 c-999ml5">{{
+                    <span class="fr">
+                      <font class="fsize12 c-999ml5">{{
                         comment.gmtCreate
-                      }}</font></span
-                    >
+                      }}</font>
+                    </span>
                   </div>
                 </li>
               </ul>
@@ -284,46 +217,16 @@
           <!-- 公共分页 开始 -->
           <div class="paging">
             <!-- undisable这个class是否存在，取决于数据属性hasPrevious -->
-            <a
-              :class="{ undisable: !data.hasPrevious }"
-              href="#"
-              title="首页"
-              @click.prevent="gotoPage(1)"
-              >首</a
-            >
-            <a
-              :class="{ undisable: !data.hasPrevious }"
-              href="#"
-              title="前一页"
-              @click.prevent="gotoPage(data.current - 1)"
-              >&lt;</a
-            >
-            <a
-              v-for="page in data.pages"
-              :key="page"
-              :class="{
-                current: data.current == page,
-                undisable: data.current == page,
-              }"
-              :title="'第' + page + '页'"
-              href="#"
-              @click.prevent="gotoPage(page)"
-              >{{ page }}</a
-            >
-            <a
-              :class="{ undisable: !data.hasNext }"
-              href="#"
-              title="后一页"
-              @click.prevent="gotoPage(data.current + 1)"
-              >&gt;</a
-            >
-            <a
-              :class="{ undisable: !data.hasNext }"
-              href="#"
-              title="末页"
-              @click.prevent="gotoPage(data.pages)"
-              >末</a
-            >
+            <a :class="{ undisable: !data.hasPrevious }" href="#" title="首页" @click.prevent="gotoPage(1)">首</a>
+            <a :class="{ undisable: !data.hasPrevious }" href="#" title="前一页"
+              @click.prevent="gotoPage(data.current - 1)">&lt;</a>
+            <a v-for="page in data.pages" :key="page" :class="{
+              current: data.current == page,
+              undisable: data.current == page,
+            }" :title="'第' + page + '页'" href="#" @click.prevent="gotoPage(page)">{{ page }}</a>
+            <a :class="{ undisable: !data.hasNext }" href="#" title="后一页"
+              @click.prevent="gotoPage(data.current + 1)">&gt;</a>
+            <a :class="{ undisable: !data.hasNext }" href="#" title="末页" @click.prevent="gotoPage(data.pages)">末</a>
             <div class="clear" />
           </div>
           <!-- 公共分页 结束 -->
@@ -341,14 +244,14 @@ export default {
     //生成订单的方法
     createOrders() {
       orderApi.createOrder(this.course.courseId).then((resp) => {
-        if(resp.data.success){
-            //获取返回订单号
+        if (resp.data.success) {
+          //获取返回订单号
           resp.data.data.orderNo;
           //跳转订单显示页面
           this.$router.push({ path: "/orders/" + resp.data.data.orderNo });
-        }else{
+        } else {
           this.$message = resp.data.message
-        } 
+        }
       });
     },
     //获取课程详细信息
@@ -365,7 +268,6 @@ export default {
         .getPageList(this.page, this.limit, this.course.courseId)
         .then((response) => {
           this.data = response.data.data;
-          console.log(response.data.data);
         });
     },
     addComment() {
@@ -387,10 +289,10 @@ export default {
         this.data = response.data.data;
       });
     },
-    toPlay(vid){
+    toPlay(vid) {
       this.$router.push({
-        name:'player',
-        params:{
+        name: 'player',
+        params: {
           vid: vid,
           courseId: this.course.courseId
         }
@@ -420,7 +322,7 @@ export default {
     ////获取课程详细信息
     this.getCourseInfo();
     this.initComment();
-  
+
   },
 };
 </script>

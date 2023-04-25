@@ -26,7 +26,6 @@ public class CommentController {
 
     @GetMapping("getCommentPage/{page}/{limit}/{courseId}")
     public R getCommentPage(@PathVariable long page, @PathVariable long limit, @PathVariable String courseId) {
-        System.out.println("courseId: "+courseId);
         Page<CommentVo> pageComment = new Page<>(page,limit);
         Map<String, Object> map = commentService.getCommentPage(pageComment, courseId);
         //返回分页所有数据
