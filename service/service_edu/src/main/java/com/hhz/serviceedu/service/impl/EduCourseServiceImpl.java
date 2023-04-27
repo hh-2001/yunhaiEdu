@@ -73,7 +73,7 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         courseDescription.setDescription(courseInfoVo.getDescription());
         //设置描述id就是课程id
         courseDescription.setId(cid);
-        courseDescriptionService.save(courseDescription);
+        courseDescriptionService.update(courseDescription, null);
 
         return cid;
     }
@@ -200,6 +200,7 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
 
     @Override
     public List<CourseCollectVo> getCourseCollect(String memberId) {
+
         ArrayList<CourseCollectVo> list = new ArrayList<>();
 
         List<EduCourseCollect> collect = baseMapper.getCourseCollect(memberId);

@@ -44,6 +44,8 @@
         <docker.image.prefix>zx</docker.image.prefix>
         <cloud-alibaba.version>0.2.2.RELEASE</cloud-alibaba.version>
         <easyexcel.version>2.1.1</easyexcel.version>
+
+        <elasticsearch.version>7.8.0</elasticsearch.version>
     </properties>
 
     <dependencyManagement>

@@ -5,11 +5,7 @@
       <section class="container">
         <h1 id="logo">
           <a href="/" title="云海学院">
-            <img
-              src="~/assets/img/logo.png"
-              width="100%"
-              alt="云海学院"
-            />
+            <img src="~/assets/img/logo.png" width="100%" alt="云海学院" />
           </a>
         </h1>
         <div class="h-r-nsl">
@@ -49,39 +45,22 @@
             </li>
             <li v-if="loginInfo.id" id="is-login-two" class="h-r-user">
               <a href="/ucenter" title>
-                <img
-                  :src="loginInfo.avatar"
-                  width="30"
-                  height="30"
-                  class="vam picImg"
-                  alt
-                />
+                <img :src="loginInfo.avatar" width="30" height="30" class="vam picImg" alt />
                 <span id="userName" class="vam disIb">{{
                   loginInfo.nickname
                 }}</span>
               </a>
-              <a
-                href="javascript:void(0);"
-                title="退出"
-                @click="logout()"
-                class="ml5"
-                >退 出</a
-              >
+              <a href="javascript:void(0);" title="退出" @click="logout()" class="ml5">退 出</a>
             </li>
             <!-- /未登录显示第1 li；登录后显示第2，3 li -->
           </ul>
           <aside class="h-r-search">
             <form action="#" method="post">
               <label class="h-r-s-box">
-                <input
-                  type="text"
-                  placeholder="输入你想学的课程"
-                  name="queryCourse.name"
-                  v-bind:value="queryCourse.name"
-                />
-                <button class="s-btn" @click="findCourse()">
+                <input type="text" placeholder="输入你想学的课程" name="keyword" v-model="query" />
+                <a :href="'/search/' + this.query">
                   <em class="icon18">&nbsp;</em>
-                </button>
+        </a>
               </label>
             </form>
           </aside>
@@ -105,9 +84,7 @@
           </h4>
           <ul class="of flink-list">
             <li>
-              <a href="http://www.baidu.com/" title="baidu" target="_blank"
-                >yunhai</a
-              >
+              <a href="http://www.baidu.com/" title="baidu" target="_blank">yunhai</a>
             </li>
           </ul>
           <div class="clear"></div>
@@ -161,7 +138,6 @@ import '~/assets/css/swiper-3.3.1.min.css'
 import "~/assets/css/pages-weixinpay.css"
 import cookie from "js-cookie";
 import loginApi from "@/api/login";
-import courseApi from "@/api/course";
 export default {
   data() {
     return {
@@ -174,7 +150,7 @@ export default {
         nickname: "",
         sex: "",
       },
-      queryCourse:{}
+      query: ""
     };
   },
   created() {
@@ -217,12 +193,6 @@ export default {
       if (userStr) {
         this.loginInfo = JSON.parse(userStr);
       }
-    },
-    findCourse(){
-      courseApi.getConditionPage(1,10,queryCourse).then(resp => {
-        console.log(resp.data.items)
-        this.$router.push({ path: "/course" });
-      })
     }
   },
 };
