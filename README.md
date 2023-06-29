@@ -28,7 +28,7 @@ db.password.0=123456
 
 3.在nacos下的bin下，启动cmd命令行调用startup.cmd
 
-4.在浏览器输入http://localhost:8848/nacos网址，用户名和密码：nacos，然后修改nacos下的服务配置文件redis、ES和mysql。
+4.在浏览器输入'http://localhost:8848/nacos'网址，用户名和密码：nacos，然后修改nacos下的服务配置文件redis、ES和mysql。
 
 5.启动redis和ES（若不需要分布式搜索和数据同步服务可以不启动）
 
