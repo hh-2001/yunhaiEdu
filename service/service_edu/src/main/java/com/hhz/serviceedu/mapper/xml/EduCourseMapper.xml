@@ -8,7 +8,7 @@
                es1.title AS subjectLevelOne,
                es2.title AS subjectLevelTwo
         FROM edu_course ec LEFT OUTER JOIN edu_course_description ecd ON ec.id=ecd.id
-                           LEFT OUTER JOIN edu_teacher et ON ec.teacher_id=et.id
+                           LEFT OUTER JOIN edu_teacher et ON ec.owner_id=et.id
                            LEFT OUTER JOIN edu_subject es1 ON ec.subject_parent_id=es1.id
                    LEFT OUTER JOIN edu_subject es2 ON ec.subject_id=es2.id
         WHERE ec.id=#{courseId}
@@ -17,13 +17,13 @@
     <!--sql语句：根据课程id查询课程基本信息-->
     <select id="getBaseCourseInfo" resultType="com.hhz.serviceedu.entity.frontvo.CourseWebVo">
         SELECT ec.id AS id,ec.title AS title,ec.price AS price,ec.lesson_num AS lessonNum,ec.cover,
-               ec.buy_count AS buyCount,ec.view_count AS viewCount,
+               ec.buy_count AS buyCount,ec.view_count AS viewCount, ec.gmt_modified AS gmtModified,
                ecd.description AS description,
-               et.id AS teacherId,et.name AS teacherName,et.intro AS intro,et.avatar AS avatar,
+               et.id AS ownerId,et.name AS teacherName,et.intro AS intro,et.avatar AS avatar,
                es1.id AS subjectLevelOneId,es1.title AS subjectLevelOne,
                es2.id AS subjectLevelTwoId,es2.title AS subjectLevelTwo
       FROM edu_course ec LEFT OUTER JOIN edu_course_description ecd ON ec.id=ecd.id
-                    LEFT OUTER JOIN edu_teacher et ON ec.teacher_id=et.id
+                    LEFT OUTER JOIN edu_teacher et ON ec.owner_id=et.id
                     LEFT OUTER JOIN edu_subject es1 ON ec.subject_parent_id=es1.id
 		            LEFT OUTER JOIN edu_subject es2 ON ec.subject_id=es2.id
         WHERE ec.id=#{courseId}
@@ -32,14 +32,12 @@
     <insert id="saveCollect">
         insert into edu_course_collect
         <trim prefix="(" suffix=")" suffixOverrides=",">
-        <if test="id != null">id,</if>
         <if test="courseId != null">course_id,</if>
         <if test="memberId != null">member_id,</if>
         <if test="gmtCreate != null">gmt_create,</if>
         <if test="gmtModified != null">gmt_modified,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="courseId != null">#{courseId},</if>
             <if test="memberId != null">#{memberId},</if>
             <if test="gmtCreate != null">#{gmtCreate},</if>
@@ -47,9 +45,13 @@
         </trim>
     </insert>
 
+    <delete id="deleteCollect">
+        delete from edu_course_collect where course_id=#{courseId} and member_id = #{memberId}
+    </delete>
+
+
     <resultMap id="courseCollect" type="com.hhz.serviceedu.entity.EduCourseCollect">
         <result property="courseId" column="course_id"/>
-        <result property="id" column="id"/>
         <result property="memberId" column="member_id"/>
         <result property="delete" column="is_deleted"/>
         <result property="gmtCreate" column="gmt_create"/>
@@ -58,5 +60,9 @@
 
     <select id="getCourseCollect" parameterType="String" resultMap="courseCollect">
         select * from edu_course_collect where member_id=#{memberId} and is_deleted=0
+    </select>
+
+    <select id="getCollectByCourse" resultType="com.hhz.serviceedu.entity.EduCourseCollect">
+        select * from edu_course_collect where member_id=#{memberId} and course_id=#{courseId} and is_deleted=0
     </select>
 </mapper>

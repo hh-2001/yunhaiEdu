@@ -1,10 +1,11 @@
 package com.hhz.serviceedu.entity.frontvo;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author: hhz
@@ -14,9 +15,12 @@ import lombok.Data;
  */
 @Data
 @TableName("edu_comment")
-public class CommentVo {
+public class CommentVo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "评论id")
+    @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
 
     @ApiModelProperty(value = "课程id")
@@ -24,6 +28,9 @@ public class CommentVo {
 
     @ApiModelProperty(value = "讲师id")
     private String teacherId;
+
+    @ApiModelProperty(value = "用户id")
+    private String memberId;
 
     @ApiModelProperty(value = "头像Url")
     private String avatar;
@@ -36,9 +43,9 @@ public class CommentVo {
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
-    private String gmtCreate;
+    private Date gmtCreate;
 
     @ApiModelProperty(value = "修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private String gmtModified;
+    private Date gmtModified;
 }

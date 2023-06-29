@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,4 +23,7 @@ public interface EduSubjectService extends IService<EduSubject> {
 
     //课程分类列表（树形）
     List<OneSubject> getAllOneTwoSubject();
+
+    //实现课程分类图表
+    List<Map<String, String>> makeChart();
 }

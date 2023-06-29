@@ -16,8 +16,8 @@
                 <li>
                   <a title="全部" @click="initTeacherAll()" href="#">全部</a>
                 </li>
-                <li v-for="teacher in subjectList" :key="teacher.id">
-                  <a :title="teacher.careerName" @click="seacherOne(teacher.careerName, index)" href="#">{{teacher.careerName}}</a>
+                <li v-for="subject in subjectList" :key="subject.id">
+                  <a :title="subject.name" @click="seacherOne(subject.name, index)" href="#">{{subject.name}}</a>
                 </li>
               </ul>
             </dd>
@@ -42,7 +42,7 @@
                     </a>
                   </div>
                   <div class="mt10 hLh30 txtOf tac">
-                    <a :href="'/teacher/1' + item.id" :title="item.name" target="_blank" class="fsize18 c-666">{{
+                    <a :href="'/teacher/' + item.id" :title="item.name" target="_blank" class="fsize18 c-666">{{
                       item.name
                     }}</a>
                   </div>
@@ -107,7 +107,7 @@ export default {
     initTeacher() {
       teacherAPI.getPageList(1, 8).then((resp) => {
         this.data = resp.data.data;
-        this.teacherList = this.data.items;
+        this.teacherList = resp.data.data.items
       });
     },
     initType() {
@@ -116,22 +116,23 @@ export default {
       });
     },
     //点击某个一级分类，查询对应的二级分类
-    seacherOne(careerName, index) {
+    seacherOne(name, index) {
       //把传递来的index赋值给ondex，为了active样式生效
       this.oneIndex = index
-      this.careerName=''
+      this.name=''
       this.teacherList=[]
 
       //把一级分类点击的id值，赋值给searchObj
-      this.careerName = careerName;
+      this.name = name;
 
       //拿着点击的一级分类id 和 所有一级分类id进行比较
       //如果id相同，从那个一级分类中获取他的二级分类
       for (let i = 0,j=0; i < this.data.items.length; i++) {
         //获取每个一级分类
         var teacher = this.data.items[i];
+        console.log(teacher)
         //比较职位是否相同
-        if (teacher.career == careerName) {
+        if (teacher.career == name) {
           this.teacherList[j++] = teacher;
         }
       }
@@ -139,13 +140,14 @@ export default {
     //分页切换方法
     //参数是页码数
     gotoPage(page) {
-      teacherAPI.getPageList(1, 8).then((resp) => {
+      teacherAPI.getPageList(page, 8).then((resp) => {
         this.data = resp.data.data;
+        this.teacherList = resp.data.data.items
       });
     },
     initTeacherAll(){
       teacherAPI.getPageList(1, 8).then((resp) => {
-        this.teacherList = resp.data.data.item;
+        this.teacherList = resp.data.data.items;
       });
     }
   },

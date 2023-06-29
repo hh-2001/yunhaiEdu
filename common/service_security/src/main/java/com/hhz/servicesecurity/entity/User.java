@@ -32,4 +32,11 @@ public class User implements Serializable {
     @ApiModelProperty(value = "用户签名")
     private String token;
 
+    /** 验证码在redis的键 */
+    private String uuid;
+
+    /** 验证码 */
+    @ApiModelProperty(value = "验证码")
+    private String code;
+
 }

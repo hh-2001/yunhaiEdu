@@ -21,6 +21,18 @@
             <svg-icon icon-class="eye" />
           </span>
         </el-form-item>
+        <el-form-item prop="code" class="code-class">
+          <el-col :span="12">
+            <span class="svg-container">
+              <svg-icon icon-class="code" />
+            </span>
+            <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" @keyup.enter.native="handleLogin" style="width: 60%;">
+            </el-input>
+          </el-col>
+          <el-col :span="12">
+            <img :src="codeUrl" @click="getCode" style="width: 100%;height: 2.5rem;"/>
+          </el-col>
+        </el-form-item>
         <el-form-item>
           <el-button :loading="loading" type="primary" style="width:100%;" @click="handleLogin">
             登录
@@ -36,6 +48,7 @@
 </template>
 
 <script>
+import { getCodeImg } from "@/api/login";
 import { isvalidUsername } from '@/utils/validate'
 
 export default {
@@ -56,18 +69,25 @@ export default {
       }
     }
     return {
+      codeUrl: '',
       loginForm: {
         username: '',
-        password: ''
+        password: '',
+        code: '',
+        uuid: '',
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }]
+        password: [{ required: true, trigger: 'blur', validator: validatePass }],
+        code: [{ required: true, trigger: "change", message: "验证码不能为空" }],
       },
       loading: false,
       pwdType: 'password',
       redirect: undefined
     }
+  },
+  created() {
+    this.getCode();
   },
   watch: {
     $route: {
@@ -78,6 +98,12 @@ export default {
     }
   },
   methods: {
+    getCode() {
+      getCodeImg().then((res) => {
+        this.codeUrl = "data:image/gif;base64," + res.data.img;
+        this.loginForm.uuid = res.data.uuid;
+      });
+    },
     showPwd() {
       if (this.pwdType === 'password') {
         this.pwdType = ''
@@ -92,12 +118,13 @@ export default {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
+            // this.$router.push({ path: this.redirect || '/' }) 返回到上次退出的页面
+            this.$router.push({ path: '/' })
           }).catch(() => {
             this.loading = false
+            this.getCode()
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -109,12 +136,13 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 $bg: #bac0c7;
 $light_gray: #eee;
+
 /* reset element-ui css */
 .login-container {
   .el-input {
     display: inline-block;
     height: 47px;
-    width: 85%;
+    width: 75%;
 
     input {
       background: transparent;
@@ -151,7 +179,7 @@ $light_gray: #eee;
   height: 100%;
   width: 100%;
   background: url("../../../static/backgroud.gif") no-repeat;
-  background-size:100% 100%;
+  background-size: 100% 100%;
 
   .login-form {
     position: absolute;
@@ -161,7 +189,7 @@ $light_gray: #eee;
     max-width: 100%;
     padding: 35px 35px 15px 35px;
     margin: 120px auto;
-    border-radius:20px;	
+    border-radius: 20px;
     background: $dark_gray;
   }
 
@@ -203,4 +231,5 @@ $light_gray: #eee;
     cursor: pointer;
     user-select: none;
   }
-}</style>
+}
+</style>

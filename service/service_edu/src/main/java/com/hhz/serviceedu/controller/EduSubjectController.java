@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -55,5 +56,10 @@ public class EduSubjectController {
         return R.ok().data("items",list);
     }
 
+    @GetMapping("makeChart")
+    public R makeChart(){
+        List<Map<String, String>> list = subjectService.makeChart();
+        return R.ok().data("items", list);
+    }
 }
 

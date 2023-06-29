@@ -47,8 +47,8 @@
 
       <!-- 课程讲师 TODO -->
       <!--课程讲师-->
-      <el-form-item label="课程讲师">
-        <el-select v-model="courseInfo.teacherId" placeholder="请选择">
+      <el-form-item label="课程所属人">
+        <el-select v-model="courseInfo.ownerId" placeholder="请选择">
           <el-option
             v-for="teacher in teacherLists"
             :key="teacher.id"
@@ -121,7 +121,7 @@ export default {
       saveBtnDisabled: false,
       courseInfo: {
         title: "",
-        teacherId: "",
+        ownerId: "",
         lessonNum: 0,
         description: "",
         cover: "static/cover.jpg ",

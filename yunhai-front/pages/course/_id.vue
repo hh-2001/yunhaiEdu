@@ -30,13 +30,17 @@
               <span class="c-fff fsize14">主讲： {{ course.teacherName }}&nbsp;&nbsp;&nbsp;</span>
             </section>
             <section class="c-attr-mt of">
-              <span class="ml10 vam">
+              <span class="ml10 vam" v-if="isCollect == true">
                 <em class="icon18 scIcon"></em>
-                <a class="c-fff vam" title="收藏" href="#">收藏</a>
+                <button class="c-fff vam" title="已收藏" @click="cancelCollect">已收藏</button>
+              </span>
+              <span class="ml10 vam" v-else>
+                <em class="icon18 scIcon"></em>
+                <button class="c-fff vam" title="收藏" @click="addCollect">收藏</button>
               </span>
             </section>
             <section class="c-attr-mt" v-if="isbuyCourse || Number(course.price) == 0">
-              <a @click="toPlay(chapterList[0].children[0].videoSourceId)" href="#" title="立即观看" class="comm-btn c-btn-3">立 即 观 看</a>
+              <a @click="toPlay(chapterList[0].children[0])" href="#" title="立即观看" class="comm-btn c-btn-3">立 即 观 看</a>
             </section>
             <section class="c-attr-mt" v-else>
               <a @click="createOrders()" href="#" title="立即购买" class="comm-btn c-btn-3">立 即 购 买</a>
@@ -104,20 +108,38 @@
                   <section class="mt20">
                     <div class="lh-menu-wrap">
                       <menu id="lh-menu" class="lh-menu mt10 mr10">
-                        <ul>
+                        <ul v-if="isbuyCourse==true || course.price == 0">
                           <!-- 文件目录 -->
                           <li class="lh-menu-stair" v-for="chapter in chapterList" :key="chapter.id">
-                            <a href="javascript: void(0)" :title="chapter.title" class="current-1">
+                            <a href="#" :title="chapter.title" class="current-1">
                               <em class="lh-menu-i-1 icon18 mr10"></em>{{ chapter.title }}
                             </a>
                             <ol class="lh-menu-ol" style="display: block">
                               <li class="lh-menu-second ml30" v-for="video in chapter.children" :key="video.id">
-                                <a @click="toPlay(video.videoSourceId)" href="#" target="_blank">
-                                  <span class="fr" v-if="video.free === true">
-                                    <i class="free-icon vam mr10">免费试听</i>
+                                <div target="_blank" style="cursor: pointer;margin: 5px;" @click="toPlay(video)">
+                                  <!-- <span class="fr" v-if="video.isFree == true">
+                                    <i class="free-icon vam mr10" >免费试听</i>
+                                  </span> -->
+                                  <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em>{{ video.title }}
+                                </div>
+                              </li>
+                            </ol>
+                          </li>
+                        </ul>
+                        <ul v-else>
+                          <!-- 文件目录 -->
+                          <li class="lh-menu-stair" v-for="chapter in chapterList" :key="chapter.id">
+                            <a href="#" :title="chapter.title" class="current-1">
+                              <em class="lh-menu-i-1 icon18 mr10"></em>{{ chapter.title }}
+                            </a>
+                            <ol class="lh-menu-ol" style="display: block">
+                              <li class="lh-menu-second ml30" v-for="video in chapter.children" :key="video.id">
+                                <div target="_blank" style="cursor: pointer;margin: 5px;">
+                                  <span class="fr" v-if="video.isFree == true">
+                                    <i class="free-icon vam mr10" @click="toPlay(video)">免费试听</i>
                                   </span>
                                   <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em>{{ video.title }}
-                                </a>
+                                </div>
                               </li>
                             </ol>
                           </li>
@@ -135,15 +157,13 @@
           <div class="i-box">
             <div>
               <section class="c-infor-tabTitle c-tab-title">
-                <a title href="javascript:void(0)">主讲讲师</a>
+                <a title href="#">主讲讲师</a>
               </section>
               <section class="stud-act-list">
                 <ul style="height: auto">
-                  <li>
+                  <li @click="toTeacher(course.ownerId)">
                     <div class="u-face">
-                      <a href="#">
-                        <img :src="course.avatar" width="50" height="50" alt />
-                      </a>
+                      <img :src="course.avatar" width="50" height="50" alt />
                     </div>
                     <section class="hLh30 txtOf">
                       <a class="c-333 fsize16 fl" href="#">{{
@@ -221,9 +241,9 @@
             <a :class="{ undisable: !data.hasPrevious }" href="#" title="前一页"
               @click.prevent="gotoPage(data.current - 1)">&lt;</a>
             <a v-for="page in data.pages" :key="page" :class="{
-              current: data.current == page,
-              undisable: data.current == page,
-            }" :title="'第' + page + '页'" href="#" @click.prevent="gotoPage(page)">{{ page }}</a>
+                  current: data.current == page,
+                  undisable: data.current == page,
+                }" :title="'第' + page + '页'" href="#" @click.prevent="gotoPage(page)">{{ page }}</a>
             <a :class="{ undisable: !data.hasNext }" href="#" title="后一页"
               @click.prevent="gotoPage(data.current + 1)">&gt;</a>
             <a :class="{ undisable: !data.hasNext }" href="#" title="末页" @click.prevent="gotoPage(data.pages)">末</a>
@@ -261,6 +281,7 @@ export default {
         this.course = resp.data.data.item
         this.isbuyCourse = resp.data.data.isBuy
         this.course.courseId = resp.data.data.item.id
+        this.isCollect = resp.data.data.isCollect
       });
     },
     initComment() {
@@ -272,7 +293,7 @@ export default {
     },
     addComment() {
       this.comment.courseId = this.course.courseId;
-      this.comment.teacherId = this.course.teacherId;
+      this.comment.teacherId = this.course.ownerId;
       comment.addComment(this.comment).then((response) => {
         if (response.data.success) {
           this.$message({
@@ -290,11 +311,61 @@ export default {
       });
     },
     toPlay(vid) {
+      if (vid == null || vid == '') {
+        this.$message({
+          message: "暂无视频资源",
+          type: "fail",
+        });
+      } else {
+        this.$router.push({
+          name: 'player',
+          params: {
+            vid: vid.videoSourceId,
+            courseId: this.course.courseId
+          }
+        })
+      }
+    },
+    //移除收藏
+    cancelCollect() {
+      courseApi.cancelCollect(this.course.courseId).then((resp) => {
+        if (resp.data.success) {
+          this.isCollect = false
+          this.$message({
+            message: "移除收藏成功",
+            type: "success",
+          });
+        } else {
+          this.$message({
+            message: "移除收藏失败",
+            type: "fail",
+          });
+        }
+      })
+    },
+    //添加收藏
+    addCollect() {
+      courseApi.saveCollect(this.course.courseId).then((resp) => {
+        if (resp.data.success) {
+          this.isCollect = true
+          this.$message({
+            message: "收藏成功",
+            type: "success",
+           
+          });
+        } else {
+          this.$message({
+            message: "收藏失败",
+            type: "fail",
+          });
+        }
+      }) 
+    },
+    toTeacher(id) {
       this.$router.push({
-        name: 'player',
+        name: 'teacher-id',
         params: {
-          vid: vid,
-          courseId: this.course.courseId
+          id: id
         }
       })
     }
@@ -304,6 +375,7 @@ export default {
       chapterList: [],
       course: {
         courseId: "",
+        ownerId:""
       },
       data: {},
       page: 1,
@@ -314,7 +386,8 @@ export default {
         courseId: "",
         teacherId: "",
       },
-      isbuyCourse: true,
+      isbuyCourse: false,
+      isCollect: false,
     };
   },
   created() {

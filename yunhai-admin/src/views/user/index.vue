@@ -17,11 +17,11 @@
                 <div class="pull-right">{{ user.username }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="phone" />手机号码
+                <svg-icon icon-class="telephone" />手机号码
                 <div class="pull-right">{{ user.mobile }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="peoples" />个性签名
+                <svg-icon icon-class="sign" />个性签名
                 <div class="pull-right">{{ user.sign }}</div>
               </li>
               <li class="list-group-item">

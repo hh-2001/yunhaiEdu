@@ -1,11 +1,12 @@
 package com.hhz.serviceedu.service.impl;
 
 import com.hhz.base.exceptionhandler.EduException;
-import com.hhz.serviceedu.controller.front.CourseFrontController;
 import com.hhz.serviceedu.entity.EduCourse;
 import com.hhz.serviceedu.entity.EduCourseCollect;
 import com.hhz.serviceedu.entity.EduCourseDescription;
 import com.hhz.serviceedu.entity.EduTeacher;
+import com.hhz.serviceedu.entity.chapter.ChapterVo;
+import com.hhz.serviceedu.entity.es.EsCourseInfo;
 import com.hhz.serviceedu.entity.frontvo.CourseCollectVo;
 import com.hhz.serviceedu.entity.frontvo.CourseFrontVo;
 import com.hhz.serviceedu.entity.frontvo.CourseWebVo;
@@ -16,15 +17,12 @@ import com.hhz.serviceedu.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
-import java.util.prefs.BackingStoreException;
 
 /**
  * <p>
@@ -41,10 +39,14 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
     @Autowired
     private EduCourseDescriptionService courseDescriptionService;
 
-    //注入小节和章节service
+    //视频内容
     @Autowired
     private EduVideoService eduVideoService;
 
+    @Autowired
+    private EduCourseCollectService eduCourseCollectService;
+
+    //注入小节和章节service
     @Autowired
     private EduChapterService chapterService;
 
@@ -63,7 +65,6 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
             //添加失败
             throw new EduException(20001,"添加课程信息失败");
         }
-
         //获取添加之后课程id
         String cid = eduCourse.getId();
 
@@ -73,7 +74,7 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         courseDescription.setDescription(courseInfoVo.getDescription());
         //设置描述id就是课程id
         courseDescription.setId(cid);
-        courseDescriptionService.update(courseDescription, null);
+        courseDescriptionService.save(courseDescription);
 
         return cid;
     }
@@ -88,8 +89,9 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
 
         //2 查询描述表
         EduCourseDescription courseDescription = courseDescriptionService.getById(courseId);
-        courseInfoVo.setDescription(courseDescription.getDescription());
-
+        if (Objects.nonNull(courseDescription)) {
+            courseInfoVo.setDescription(courseDescription.getDescription());
+        }
         return courseInfoVo;
     }
 
@@ -108,7 +110,11 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         EduCourseDescription description = new EduCourseDescription();
         description.setId(courseInfoVo.getId());
         description.setDescription(courseInfoVo.getDescription());
-        courseDescriptionService.updateById(description);
+        if (Objects.isNull(courseDescriptionService.getById(courseInfoVo.getId()))){
+            courseDescriptionService.save(description);
+        }else {
+            courseDescriptionService.updateById(description);
+        }
     }
 
     //根据课程id查询课程确认信息
@@ -161,7 +167,7 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
                 wrapper.orderByDesc("price");
             }
         }
-
+        wrapper.eq("status", "Normal");
         baseMapper.selectPage(pageParam,wrapper);
 
         List<EduCourse> records = pageParam.getRecords();
@@ -186,6 +192,29 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         return map;
     }
 
+    @Override
+    public List<EsCourseInfo> getCourseFrontListByTeacher(Page<EduCourse> pageCourse) {
+        List<EsCourseInfo> list = new ArrayList<>();
+        QueryWrapper<EduCourse> wrapper = new QueryWrapper<>();
+        wrapper.eq("status", "Normal");
+
+        baseMapper.selectPage(pageCourse,wrapper);
+        List<EduCourse> records = pageCourse.getRecords();
+        for (EduCourse record : records) {
+            EsCourseInfo esCourseInfo = new EsCourseInfo();
+            EduTeacher teacher = eduTeacherService.getById(record.getOwnerId());
+            esCourseInfo.setTeacherName(teacher.getName());
+            esCourseInfo.setIntro(teacher.getIntro());
+            esCourseInfo.setAvatar(teacher.getAvatar());
+            esCourseInfo.setId(record.getId());
+            esCourseInfo.setPrice(record.getPrice());
+            esCourseInfo.setCover(record.getCover());
+            esCourseInfo.setTitle(record.getTitle());
+            list.add(esCourseInfo);
+        }
+        return list;
+    }
+
     //根据课程id，编写sql语句查询课程信息
     @Override
     public CourseWebVo getBaseCourseInfo(String courseId) {
@@ -194,8 +223,15 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
 
     @Override
     public Boolean saveCollect(EduCourseCollect courseCollect) {
+        if (StringUtils.isBlank(courseCollect.getMemberId()) || StringUtils.isEmpty(courseCollect.getMemberId())){
+            throw new EduException(20002,"还没进行登录");
+        }
+        return eduCourseCollectService.save(courseCollect);
+    }
 
-        return baseMapper.saveCollect(courseCollect) > 0;
+    @Override
+    public Boolean deleteCollect(EduCourseCollect courseCollect){
+        return baseMapper.deleteCollect(courseCollect) > 0;
     }
 
     @Override
@@ -206,11 +242,33 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         List<EduCourseCollect> collect = baseMapper.getCourseCollect(memberId);
         for (EduCourseCollect courseCollect : collect) {
             EduCourse eduCourse = baseMapper.selectById(courseCollect.getCourseId());
-            EduTeacher teacher = eduTeacherService.getById(eduCourse.getTeacherId());
+            EduTeacher teacher = eduTeacherService.getById(eduCourse.getOwnerId());
             CourseCollectVo collectVo = new CourseCollectVo(courseCollect, eduCourse, teacher);
             list.add(collectVo);
         }
         return list;
+    }
+
+    @Override
+    public boolean isOkPublic(String id) {
+        EduCourse eduCourse = baseMapper.selectById(id);
+        if(StringUtils.isBlank(eduCourse.getOwnerId()) || StringUtils.isEmpty(eduCourse.getOwnerId())){
+            throw new EduException(20001, "还没有设置所属人");
+        }
+        List<ChapterVo> list = chapterService.getChapterVideoByCourseId(id);
+        if (list.size() <= 0){
+            throw new EduException(20001,"还没设置章节内容");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean checkCollect(String courseId, String memberId) {
+        EduCourseCollect courseCollect = baseMapper.getCollectByCourse(courseId,memberId);
+        if(Objects.isNull(courseCollect)){
+            return false;
+        }
+        return true;
     }
 
 }

@@ -23,6 +23,7 @@ export default{
             data: ucenter,
         })
     },
+    //获取订单信息
     getOrderInfo(page,limit){
         return request({
             url:`/eduorder/order/getOrderInfoByMember/${page}/${limit}`,

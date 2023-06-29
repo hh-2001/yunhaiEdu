@@ -94,8 +94,14 @@ bottom: 40px;"
             position="right"
           />
         </el-form-item>
+        <el-form-item label="音视频">
+          <el-radio-group v-model="video.type">
+            <el-radio :label="'0'">视频</el-radio>
+            <el-radio :label="'1'">音频</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="是否免费">
-          <el-radio-group v-model="video.free">
+          <el-radio-group v-model="video.isFree">
             <el-radio :label="true">免费</el-radio>
             <el-radio :label="false">默认</el-radio>
           </el-radio-group>
@@ -123,6 +129,10 @@ bottom: 40px;"
               <i class="el-icon-question" />
             </el-tooltip>
           </el-upload>
+          <span v-if="video.videoOriginalName!=null">
+            {{ video.type=='0' ? '视频：':'音频：' }}
+            {{video.videoOriginalName}}
+          </span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -151,7 +161,8 @@ export default {
       BASE_API: process.env.BASE_API, // 接口API地址
       video: {
         id: "",
-        free: "",
+        isFree: true,
+        type:"0",
         sort: "",
         title: "",
         videoSourceId: "",
@@ -169,8 +180,8 @@ export default {
   methods: {
     //上传成功执行方法
     handleVodUploadSuccess(response, file, fileList) {
-      this.video.videoSourceId = response.data.videoId;
-      this.video.videoOriginalName = response.data.videoOriginalName;
+      this.video.videoSourceId = response.data.video.videoId;
+      this.video.videoOriginalName = response.data.video.videoOriginalName;
     },
     //点击XX 会调用的方法
     beforeVodRemove(file, fileList) {
@@ -198,6 +209,7 @@ export default {
       this.dialogVideoFormVisible = true;
       video.getVideoById(videoId).then((resp) => {
         this.video = resp.data.item;
+        console.log(this.video)
       });
     },
     //删除小节
@@ -248,7 +260,6 @@ export default {
     updateVideorById(videoId) {
       //设置小节id到video对象中
       this.video.id = videoId;
-      console.log("视频对象:"+this.video.videoSourceId)
       video.updateVideo(this.video).then((resp) => {
         //关闭弹框
         this.dialogVideoFormVisible = false;

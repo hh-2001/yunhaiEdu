@@ -1,0 +1,15 @@
+server:
+  port: 8005
+
+spring:
+  application:
+    name: service-msm
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: properties

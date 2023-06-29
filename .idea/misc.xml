@@ -22,6 +22,7 @@
         <option value="$PROJECT_DIR$/infrastructrue/api_gateway/pom.xml" />
         <option value="$PROJECT_DIR$/common/sql/pom.xml" />
         <option value="$PROJECT_DIR$/service/service_blog/pom.xml" />
+        <option value="$PROJECT_DIR$/canal_client/pom.xml" />
       </list>
     </option>
   </component>

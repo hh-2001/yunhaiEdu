@@ -35,12 +35,12 @@
                             </a>
                             <ol class="lh-menu-ol" style="display: block">
                               <li class="lh-menu-second ml30" v-for="video in chapter.children" :key="video.id">
-                                <a href="#" @click="changeVideo(video.videoSourceId)" target="_blank">
+                                <div @click="changeVideo(video.videoSourceId)" target="_blank" style="cursor: pointer;margin: 5px;">
                                   <span class="fr" v-if="video.free === true">
                                     <i class="free-icon vam mr10">免费试听</i>
                                   </span>
                                   <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em>{{ video.title }}
-                                </a>
+                                </div>
                               </li>
                             </ol>
                           </li>
@@ -89,11 +89,9 @@
               </section>
               <section class="stud-act-list">
                 <ul style="height: auto">
-                  <li>
+                  <li @click="toTeacher(course.ownerId)">
                     <div class="u-face">
-                      <a href="#">
                         <img :src="course.avatar" width="50" height="50" alt />
-                      </a>
                     </div>
                     <section class="hLh30 txtOf">
                       <a class="c-333 fsize16 fl" href="#">{{
@@ -230,6 +228,14 @@ export default {
     changeVideo(vid){
       this.url = "/player/" + vid
       document.querySelector('iframe').contentWindow.location.reload();
+    },
+    toTeacher(id){
+      this.$router.push({
+          name: 'teacher-id',
+          params: {
+            id: id
+          }
+        })
     }
   },
   data() {

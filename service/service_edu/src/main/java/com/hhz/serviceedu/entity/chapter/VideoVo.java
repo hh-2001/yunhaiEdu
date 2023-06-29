@@ -10,4 +10,6 @@ public class VideoVo {
     private String title;
 
     private String videoSourceId;//视频id
+
+    private Boolean isFree;
 }

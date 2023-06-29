@@ -37,10 +37,6 @@ public class EduCourseCollect implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "收藏课程ID")
-    @TableId(value = "id", type = IdType.ID_WORKER_STR)
-    private String id;
-
     @ApiModelProperty(value = "课程ID")
     private String courseId;
 

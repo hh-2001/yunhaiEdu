@@ -1,0 +1,15 @@
+server:
+  port: 8007
+
+spring:
+  application:
+    name: service-order
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: properties

@@ -91,6 +91,8 @@ export default {
       //vue elementUI tree树形控件获取父节点ID的实例
       //node_modules\element-ui\lib\element-ui.common.js
       //25348行修改源码
+      ids = ids+",1"
+      console.log(ids)
       menu.doAssign(this.roleId, ids).then(response => {
           if(response.success){
               this.$message({

@@ -85,7 +85,7 @@ public class UserController {
     @PostMapping("save")
     public R save(@RequestBody User user) {
         user.setPassword(MD5.encrypt(user.getPassword()));
-        userService.save(user);
+        userService.addUser(user);
         return R.ok();
     }
 

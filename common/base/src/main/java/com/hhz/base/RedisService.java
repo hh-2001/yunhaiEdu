@@ -170,6 +170,7 @@ public class RedisService {
     public <T> void setCacheMap(final String key, final Map<String, T> dataMap) {
         if (dataMap != null) {
             redisTemplate.opsForHash().putAll(key, dataMap);
+            expire(key, 100L);
         }
     }
 

@@ -7,7 +7,7 @@
                 <el-col>
                     <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"
                         :action="BASE_API + '/eduoss/fileoss/upload'" class="avatar-uploader">
-                        <img :src="ucenter.avatar" width="80%" />
+                        <img :src="ucenter.avatar" width="80%" height="80%" />
                     </el-upload>
                 </el-col>
             </el-row>

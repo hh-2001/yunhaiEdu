@@ -3,14 +3,12 @@ package com.hhz.vod.controller;
 import com.aliyun.oss.ClientException;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.profile.DefaultProfile;
-import com.aliyuncs.vod.model.v20170321.DeleteVideoRequest;
-import com.aliyuncs.vod.model.v20170321.DeleteVideoResponse;
-import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthRequest;
-import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthResponse;
+import com.aliyuncs.vod.model.v20170321.*;
 import com.hhz.base.exceptionhandler.EduException;
 import com.hhz.commonutils.R;
 import com.hhz.vod.Utils.ConstantVodUtils;
 import com.hhz.vod.Utils.InitVodCilent;
+import com.hhz.vod.pojo.VideoVo;
 import com.hhz.vod.service.VodService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +97,25 @@ public class VodController {
             return R.ok().data("playAuth", playAuth);
         } catch (Exception e) {
             throw new EduException(20001, "获取凭证失败");
+        }
+    }
+
+    @GetMapping("getVideoInfo/{id}")
+    public R getVideoInfo(@PathVariable String id){
+        try {
+            //创建初始化对象
+            DefaultAcsClient client =
+                    InitVodCilent.initVodClient(ConstantVodUtils.ACCESS_KEY_ID, ConstantVodUtils.ACCESS_KEY_SECRET);
+            //创建获取凭证request和response对象
+            GetPlayInfoRequest request = new GetPlayInfoRequest();
+            //向request设置视频id
+            request.setVideoId(id);
+            //调用方法得到凭证
+            GetPlayInfoResponse response = client.getAcsResponse(request);
+            VideoVo videoVo = vodService.getVideoVo(response);
+            return R.ok().data("item", videoVo);
+        } catch (Exception e) {
+            throw new EduException(20001, "获取视频信息失败");
         }
     }
 }

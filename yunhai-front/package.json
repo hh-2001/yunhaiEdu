@@ -5,7 +5,7 @@
   "author": "hhz",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
+    "dev": "nuxt --host 192.168.4.115",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
@@ -31,6 +31,7 @@
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-vue": "^4.0.0",
+    "svg-sprite-loader": "^6.0.11",
     "webpack": "^4.46.0"
   }
 }

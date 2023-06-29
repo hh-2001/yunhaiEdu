@@ -35,6 +35,9 @@ public class Article implements Serializable {
     @ApiModelProperty(value = "文章标题")
     private String articleName;
 
+    @ApiModelProperty(value = "文章图")
+    private String cover;
+
     @ApiModelProperty(value = "创建人")
     private String createName;
 

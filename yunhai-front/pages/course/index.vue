@@ -18,16 +18,9 @@
                 <li>
                   <a title="全部" @click="initCourseAll()" href="#">全部</a>
                 </li>
-                <li
-                  v-for="subjectNested in subjectNestedList"
-                  :key="subjectNested.id"
-                >
-                  <a
-                    :title="subjectNested.title"
-                    @click="seacherOne(subjectNested.id, index)"
-                    href="#"
-                    >{{ subjectNested.title }}</a
-                  >
+                <li v-for="subjectNested in subjectNestedList" :key="subjectNested.id">
+                  <a :title="subjectNested.title" @click="seacherOne(subjectNested.id, index)" href="#">{{
+                    subjectNested.title }}</a>
                 </li>
               </ul>
             </dd>
@@ -39,26 +32,19 @@
             <dd class="c-s-dl-li">
               <ul class="clearfix">
                 <li v-for="subject in subSubjectList" :key="subject.id">
-                  <a
-                    :title="subject.title"
-                    @click="searchTwo(subject.id, index)"
-                    href="#"
-                    >{{ subject.title }}</a
-                  >
+                  <a :title="subject.title" @click="searchTwo(subject.id, index)" href="#">{{ subject.title }}</a>
                 </li>
               </ul>
             </dd>
           </dl>
           <div class="clear"></div>
         </section>
-       
+
         <div class="mt40">
           <!-- /无数据提示 开始-->
           <section class="no-data-wrap" v-if="data.total == 0">
             <em class="icon30 no-data-ico">&nbsp;</em>
-            <span class="c-666 fsize14 ml10 vam"
-              >没有相关数据，小编正在努力整理 中...</span
-            >
+            <span class="c-666 fsize14 ml10 vam">没有相关数据，小编正在努力整理 中...</span>
           </section>
           <!-- /无数据提示 结束-->
           <article class="comm-course-list" v-if="data.total > 0">
@@ -66,34 +52,20 @@
               <li v-for="item in data.items" :key="item.id">
                 <div class="cc-l-wrap">
                   <section class="course-img">
-                    <img
-                      :src="item.cover"
-                      class="img-responsive"
-                      :alt="item.title"
-                    />
+                    <img :src="item.cover" class="img-responsive" :alt="item.title" />
                     <div class="cc-mask">
-                      <a
-                        :href="/course/+item.id"
-                        title="开始学习"
-                        class="comm-btn c- btn-1"
-                        >开始学习</a
-                      >
+                      <a :href="/course/ + item.id" title="开始学习" class="comm-btn c- btn-1">开始学习</a>
                     </div>
                   </section>
                   <h3 class="hLh30 txtOf mt10">
-                    <a
-                      :href="/course/+item.id"
-                      :title="item.title"
-                      class="course-title fsize18 c-333"
-                      >{{ item.title }}</a
-                    >
+                    <a :href="/course/ + item.id" :title="item.title" class="course-title fsize18 c-333">{{ item.title}}</a>
                   </h3>
                   <section class="mt10 hLh20 of">
-                    <span
-                      class="fr jgTag bg-green"
-                      v-if="Number(item.price) === 0"
-                    >
+                    <span class="fr jgTag bg-green" v-if="Number(item.price) === 0">
                       <i class="c-fff fsize12 f-fA">免费</i>
+                    </span>
+                    <span v-else class="fr jgTag numPrice">
+                      {{ '¥' + item.price }}
                     </span>
                     <span class="fl jgAttr c-ccc f-fA">
                       <i class="c-999 f-fA">9634人学习</i>
@@ -111,46 +83,16 @@
         <div>
           <div class="paging">
             <!-- undisable这个class是否存在，取决于数据属性hasPrevious -->
-            <a
-              :class="{ undisable: !data.hasPrevious }"
-              href="#"
-              title="首页"
-              @click.prevent="gotoPage(1)"
-              >首</a
-            >
-            <a
-              :class="{ undisable: !data.hasPrevious }"
-              href="#"
-              title="前一页"
-              @click.prevent="gotoPage(data.current - 1)"
-              >&lt;</a
-            >
-            <a
-              v-for="page in data.pages"
-              :key="page"
-              :class="{
+            <a :class="{ undisable: !data.hasPrevious }" href="#" title="首页" @click.prevent="gotoPage(1)">首</a>
+            <a :class="{ undisable: !data.hasPrevious }" href="#" title="前一页"
+              @click.prevent="gotoPage(data.current - 1)">&lt;</a>
+            <a v-for="page in data.pages" :key="page" :class="{
                 current: data.current == page,
                 undisable: data.current == page,
-              }"
-              :title="'第' + page + '页'"
-              href="#"
-              @click.prevent="gotoPage(page)"
-              >{{ page }}</a
-            >
-            <a
-              :class="{ undisable: !data.hasNext }"
-              href="#"
-              title="后一页"
-              @click.prevent="gotoPage(data.current + 1)"
-              >&gt;</a
-            >
-            <a
-              :class="{ undisable: !data.hasNext }"
-              href="#"
-              title="末页"
-              @click.prevent="gotoPage(data.pages)"
-              >末</a
-            >
+              }" :title="'第' + page + '页'" href="#" @click.prevent="gotoPage(page)">{{ page }}</a>
+            <a :class="{ undisable: !data.hasNext }" href="#" title="后一页"
+              @click.prevent="gotoPage(data.current + 1)">&gt;</a>
+            <a :class="{ undisable: !data.hasNext }" href="#" title="末页" @click.prevent="gotoPage(data.pages)">末</a>
             <div class="clear" />
           </div>
         </div>
@@ -179,11 +121,11 @@ export default {
   },
   methods: {
     //根据价格进行排序
-    searchPrice(){
+    searchPrice() {
       //设置对应变量值，为了样式生效
-      this.buyCountSort=''
-      this.gmtCreateSort=''
-      this.priceSort='1'
+      this.buyCountSort = ''
+      this.gmtCreateSort = ''
+      this.priceSort = '1'
 
       //把值赋值到searchObj中
       this.searchObj.buyCountSort = this.buyCountSort
@@ -194,11 +136,11 @@ export default {
       this.gotoPage(1)
     },
     //根据最新进行排序
-    searchGmtCreate(){
+    searchGmtCreate() {
       //设置对应变量值，为了样式生效
-      this.buyCountSort=''
-      this.gmtCreateSort='1'
-      this.priceSort=''
+      this.buyCountSort = ''
+      this.gmtCreateSort = '1'
+      this.priceSort = ''
 
       //把值赋值到searchObj中
       this.searchObj.buyCountSort = this.buyCountSort
@@ -209,11 +151,11 @@ export default {
       this.gotoPage(1)
     },
     //根据销量排序
-    searchBuyCount(){
+    searchBuyCount() {
       //设置对应变量值，为了样式生效
-      this.buyCountSort='1'
-      this.gmtCreateSort=''
-      this.priceSort=''
+      this.buyCountSort = '1'
+      this.gmtCreateSort = ''
+      this.priceSort = ''
 
       //把值赋值到searchObj中
       this.searchObj.buyCountSort = this.buyCountSort
@@ -254,8 +196,8 @@ export default {
       //把传递来的index赋值给ondex，为了active样式生效
       this.oneIndex = index
       this.twoIndex = -1
-      this.searchObj.subjectId=''
-      this.subSubjectList=[]
+      this.searchObj.subjectId = ''
+      this.subSubjectList = []
 
       //把一级分类点击的id值，赋值给searchObj
       this.searchObj.subjectParentId = subjectParentId;
@@ -295,10 +237,16 @@ export default {
 .active {
   background: #bdbdbd;
 }
+
 .hide {
   display: none;
 }
+
 .show {
   display: block;
+}
+
+.numPrice {
+  color: #FF1B20;
 }
 </style>

@@ -5,11 +5,34 @@
         <div class="showTime"></div>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="12">
+    <!-- 第一 -->
+    <el-row :gutter="20">
+      <el-col :span="8">
 
-        <div id="chart" class="chart" style="height: 500px; width: 100%"></div>
-
+        <el-card class="box-card panel" shadow="hover">
+          <div slot="header" class="clearfix" style="color: black; font-size: 28px; font-weight: bold;text-align:center">
+            <span>注册人数</span>
+          </div>
+          <div id="chart" class="chartBody" ></div>
+          <div class="panel-footer"></div>
+        </el-card>
+        <el-card class="box-card panel" shadow="hover">
+          <div slot="header" class="clearfix" style="color: black; font-size: 28px; font-weight: bold;text-align:center">
+            <span>课程分类</span>
+          </div>
+          <div id="courseClass" class="chartBody" ></div>
+          <div class="panel-footer"></div>
+        </el-card>
+      </el-col>
+      <el-col :span="8"><h3> </h3></el-col>
+      <el-col :span="8">
+        <el-card class="box-card panel" shadow="hover">
+          <div slot="header" class="clearfix" style="color: black; font-size: 28px; font-weight: bold;text-align:center">
+            <span>权限状态</span>
+          </div>
+          <div id="menuStatus" class="chartMenu"></div>
+          <div class="panel-footer"></div>
+        </el-card>
       </el-col>
     </el-row>
   </div>
@@ -19,6 +42,7 @@
 import { mapGetters } from 'vuex'
 import echarts from "echarts";
 import staApi from "@/api/sta.js";
+import menuApi from "@/api/acl/menu.js";
 
 export default {
   name: 'Dashboard',
@@ -49,9 +73,6 @@ export default {
       // console.log(this.chart)
       // 指定图表的配置项和数据
       var option = {
-        title: {
-          text: "当日注册人数",
-        },
         tooltip: {
           trigger: "axis",
         },
@@ -146,6 +167,73 @@ export default {
         t = setTimeout(time, 1000); //设定定时器，循环运行
       }
     },
+    ClassChart() {
+      staApi.getCourseClass().then(resp => {
+        var classChart = echarts.init(
+          document.getElementById("courseClass"),
+          "light"
+        );
+        classChart.setOption({
+          backgroundColor: "white",
+          tooltip: {},
+          series: [
+            {
+              name: "比例",
+              type: "pie",
+              radius: "55%",
+              data: resp.data.items,
+            },
+          ],
+        });
+      })
+
+    },
+    menuChart() {
+      menuApi.getNestedTreeList().then(resp => {
+        var menuChart = echarts.init(
+          document.getElementById("menuStatus"),
+          "light"
+        );
+        console.log(resp.data.items)
+        menuChart.setOption({
+          backgroundColor: "white",
+          tooltip: {
+            trigger: 'item',
+            triggerOn: 'mousemove'
+          },
+          series: [
+            {
+              type: 'tree',
+              data: resp.data.items,
+              top: '1%',
+              left: '15%',
+              bottom: '1%',
+              right: '20%',
+              symbolSize: 7,
+              label: {
+                position: 'left',
+                verticalAlign: 'middle',
+                align: 'right',
+                fontSize: 15
+              },
+              leaves: {
+                label: {
+                  position: 'right',
+                  verticalAlign: 'middle',
+                  align: 'left'
+                }
+              },
+              emphasis: {
+                focus: 'descendant'
+              },
+              expandAndCollapse: true,
+              animationDuration: 550,
+              animationDurationUpdate: 750
+            }
+          ]
+        });
+      })
+    }
   },
   created() {
     const date = new Date();
@@ -155,30 +243,61 @@ export default {
     const NOW_MONTHS_AGO = `${year}-${month}-${day}`
     this.searchObj.begin = NOW_MONTHS_AGO
     this.searchObj.end = NOW_MONTHS_AGO
-    this.showChart();
     this.getNowDate();
+
+  },
+  mounted() {
+    this.menuChart();
+    this.showChart();
+    this.ClassChart();
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
+<style rel="stylesheet/scss" lang="scss" scoped>  .dashboard-container {
+    height: 100%;
+
+    &-container {
+      margin: 30px;
+    }
+
+    &-text {
+      font-size: 30px;
+      line-height: 46px;
+    }
   }
 
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
+  .chart-container {
+    width: 100%;
   }
-}
-.chart-container{
-  width: 100%;
-}
-.showTime{
-  width: 100%;
-  font-size: 36px;
-  text-align: center;
-}
 
-</style>
+  .showTime {
+    width: 100%;
+    font-size: 36px;
+    color: black;
+    text-align: center;
+  }
+
+  .el-row {
+    margin: 10px 5px;
+  }
+
+  .el-card {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.925);
+    margin-bottom: 30px;
+  }
+
+  .clearfix {
+    width: 100%;
+  }
+
+  .chartBody {
+    left: 0;
+    height: 20rem;
+  }
+  .chartMenu{
+    left: 0;
+    height: 50rem;
+  }
+  </style>

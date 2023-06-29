@@ -22,6 +22,8 @@ public class EsCourseInfo {
 
     private String cover;
 
+    private String avatar;
+
     private String teacherName;
 
     private String intro;

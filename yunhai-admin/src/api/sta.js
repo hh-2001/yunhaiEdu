@@ -21,5 +21,11 @@ export default {
             url: `/staservice/daily/showDataByType/${searchObj.type}`,
             method: 'get'
         })
+    },
+    getCourseClass(){
+        return request({
+            url: `/eduservice/subject/makeChart`,
+            method: 'get'
+        })
     }
 }

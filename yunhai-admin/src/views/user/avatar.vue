@@ -4,10 +4,10 @@
                 class="img-circle img-lg" /></div>
         <el-dialog :title="title" :visible.sync="open" width="400px" append-to-body >
             <el-row>
-                <el-col>
+                <el-col :span="24">
                     <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"
-                        :action="BASE_API + '/eduoss/fileoss/upload'" class="avatar-uploader">
-                        <img :src="user.avatar" width="80%" />
+                        :action="BASE_API + '/eduoss/fileoss/upload'" class="avatar-uploader" style="height:12rem">
+                        <img :src="user.avatar" style="width:20rem;height:12rem" />
                     </el-upload>
                 </el-col>
             </el-row>

@@ -28,4 +28,9 @@ public interface EduCourseMapper extends BaseMapper<EduCourse> {
     int saveCollect(EduCourseCollect courseCollect);
 
     List<EduCourseCollect> getCourseCollect(@Param("memberId") String memberId);
+
+    int deleteCollect(EduCourseCollect courseCollect);
+
+    //获取收藏的课程，检查是否收藏
+    EduCourseCollect getCollectByCourse(@Param("courseId") String courseId, @Param("memberId") String memberId);
 }

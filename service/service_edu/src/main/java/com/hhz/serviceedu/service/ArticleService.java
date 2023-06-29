@@ -2,6 +2,9 @@ package com.hhz.serviceedu.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hhz.serviceedu.entity.Article;
+import com.hhz.serviceedu.entity.vo.ArticleInfoVo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author: hhz
@@ -10,4 +13,11 @@ import com.hhz.serviceedu.entity.Article;
  * @Description:
  */
 public interface ArticleService extends IService<Article> {
+    ArticleInfoVo getArticleDetail(String articleId);
+
+    /**
+     * 文章导出为pdf
+     * @param articleId
+     */
+    void exportPdf(String articleId, HttpServletResponse response);
 }

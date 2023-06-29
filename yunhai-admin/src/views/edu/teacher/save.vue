@@ -159,7 +159,12 @@ export default {
       this.getLevel();
       teacherApi.updateById(id).then((resp) => {
         this.teacher = resp.data.item;
-        this.teacher.level = this.teacher.career
+		for(var i=0;i < this.levelList.length;i++){
+			if(this.teacher.career == this.levelList[i].name){
+				this.teacher.level = this.levelList[i].id
+			}
+		}
+		this.teacher.level = this.teacher.career
       });
     },
     init() {

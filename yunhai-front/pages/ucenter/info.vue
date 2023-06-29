@@ -66,7 +66,7 @@ export default {
                     });
                 }else{
                     this.$message({
-                        message: resp.message,
+                        message: resp.data.message,
                         type: "fail",
                     });
                 }

@@ -51,6 +51,7 @@ public class IndexFrontController {
             QueryWrapper<EduCourse> wrapper = new QueryWrapper<>();
             wrapper.orderByDesc("id");
             wrapper.last("limit 8");
+            wrapper.eq("status", "Normal");
             List<EduCourse> courseList = courseService.list(wrapper);
 
             //查询前4条名师

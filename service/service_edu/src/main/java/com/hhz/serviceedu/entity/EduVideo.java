@@ -42,6 +42,9 @@ public class EduVideo implements Serializable {
     @ApiModelProperty(value = "节点名称")
     private String title;
 
+    @ApiModelProperty(value = "类型（0：视频 1：音频）")
+    private String type;
+
     @ApiModelProperty(value = "云端视频资源")
     private String videoSourceId;
 

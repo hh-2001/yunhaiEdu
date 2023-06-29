@@ -3,12 +3,14 @@ package com.hhz.serviceacl.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.hhz.commonutils.JwtUtils;
 import com.hhz.commonutils.MD5;
+import com.hhz.serviceacl.entity.LoginUser;
 import com.hhz.serviceacl.entity.Permission;
 import com.hhz.serviceacl.entity.User;
 import com.hhz.serviceacl.service.IndexService;
 import com.hhz.serviceacl.service.PermissionService;
 import com.hhz.commonutils.R;
 import com.hhz.serviceacl.service.UserService;
+import com.hhz.serviceacl.service.ValidateCodeService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +34,25 @@ public class IndexController {
 
     @Autowired
     private UserService userService;
+
+    /**
+     * 登录
+     * @return
+     */
+    @PostMapping("login")
+    public R login(@RequestBody LoginUser user){
+        String token = indexService.login(user);
+        return R.ok().data("token", token);
+    }
+
+	 /**
+     * 获取验证码
+     * @return
+     */
+    @GetMapping("code")
+    public R getCode() throws IOException {
+        return indexService.createCaptcha();
+    }
 
     /**
      * 根据token获取用户信息
@@ -78,7 +100,6 @@ public class IndexController {
         //获取当前登录用户用户名
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         List<JSONObject> permissionList = indexService.getMenu(username);
-        permissionList.forEach(System.out::println);
         return R.ok().data("items", permissionList);
     }
 

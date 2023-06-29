@@ -1,69 +1,30 @@
 <template>
   <div class="app-container">
-    <el-input v-model="filterText" placeholder="Filter keyword" style="margin-bottom:30px;"/>
-
-
-    <el-table
-      :data="menuList"
-      style="width: 100%;margin-bottom: 20px;"
-      row-key="id"
-      border
-      default-expand-all
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-      <el-table-column
-        prop="name"
-        label="名称"
-        sortable
-        width="180">
+    <el-input v-model="search" placeholder="Filter keyword" style="margin-bottom:30px;" />
+    <el-table ref="menuTree" :data="treeTable" style="width: 100%;margin-bottom: 20px;" row-key="id" border
+      default-expand-all :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+      <el-table-column prop="name" label="名称" sortable width="180">
       </el-table-column>
-      <el-table-column
-        prop="path"
-        label="访问路径"
-        sortable
-        width="180">
+      <el-table-column prop="path" label="访问路径" sortable width="180">
       </el-table-column>
-      <el-table-column
-        prop="component"
-        label="组件路径"
-        sortable
-        width="180">
+      <el-table-column prop="component" label="组件路径" sortable width="180">
       </el-table-column>
-      <el-table-column
-        prop="permissionValue"
-        label="权限值">
+      <el-table-column prop="permissionValue" label="权限值">
       </el-table-column>
-      <el-table-column
-        label="操作">
+      <el-table-column label="操作">
         <template slot-scope="scope">
           <!-- v-if="node.level == 1 || node.level == 2" v-if="node.level == 3" v-if="node.level == 4"-->
-          <el-button
-            v-if="(scope.row.level == 1 || scope.row.level == 2) && hasPerm('permission.add')"
-            type="text"
-            size="mini"
-            @click="() => {dialogFormVisible = true, menu.pid = scope.row.id}">添加菜单
+          <el-button v-if="(scope.row.level == 1 || scope.row.level == 2)" type="text" size="mini"
+            @click="() => { dialogFormVisible = true, menu.pid = scope.row.id }">添加菜单
           </el-button>
-          <el-button
-            v-if="scope.row.level == 3 &&  hasPerm('permission.add')"
-            type="text"
-            size="mini"
-            @click="() => {dialogPermissionVisible = true, permission.pid = scope.row.id}">添加功能
+          <el-button v-if="scope.row.level == 3" type="text" size="mini"
+            @click="() => { dialogPermissionVisible = true, permission.pid = scope.row.id }">添加功能
           </el-button>
-          <el-button
-            v-if="scope.row.level == 4 &&  hasPerm('permission.update')"
-            type="text"
-            size="mini"
-            @click="() => updateFunction(scope.row)">修改功能
+          <el-button v-if="scope.row.level == 4" type="text" size="mini" @click="() => updateFunction(scope.row)">修改功能
           </el-button>
-          <el-button
-            v-if="scope.row.level != 4 &&  hasPerm('permission.update')"
-            type="text"
-            size="mini"
-            @click="() => getById(scope.row)">修改
+          <el-button v-if="scope.row.level != 4" type="text" size="mini" @click="() => getById(scope.row)">修改
           </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => remove(scope.row)" v-if="hasPerm('permission.remove')">删除
+          <el-button type="text" size="mini" @click="() => remove(scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -72,15 +33,17 @@
     <el-dialog :visible.sync="dialogFormVisible" :title="dialogFormValue">
       <el-form ref="menu" :model="menu" :rules="menuValidateRules" label-width="120px">
         <el-form-item label="菜单名称" prop="name">
-          <el-input v-model="menu.name"/>
+          <el-input v-model="menu.name" />
         </el-form-item>
         <el-form-item label="访问路径" prop="path">
-          <el-input v-model="menu.path"/>
+          <el-input v-model="menu.path" />
         </el-form-item>
         <el-form-item label="组件路径" prop="component">
-          <el-input v-model="menu.component"/>
+          <el-input v-model="menu.component" />
         </el-form-item>
-
+        <el-form-item label="菜单图标" prop="icon">
+          <el-input v-model="menu.icon" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="restData()">取 消</el-button>
@@ -91,18 +54,20 @@
     <el-dialog :visible.sync="dialogPermissionVisible" title="添加功能">
       <el-form ref="permission" :model="permission" :rules="permissionValidateRules" label-width="120px">
         <el-form-item label="功能名称" prop="name">
-          <el-input v-model="permission.name"/>
+          <el-input v-model="permission.name" />
         </el-form-item>
         <el-form-item label="访问路径">
-          <el-input v-model="permission.path"/>
+          <el-input v-model="permission.path" />
         </el-form-item>
         <el-form-item label="组件路径">
-          <el-input v-model="permission.component"/>
+          <el-input v-model="permission.component" />
         </el-form-item>
         <el-form-item label="功能权限值" prop="permissionValue">
-          <el-input v-model="permission.permissionValue"/>
+          <el-input v-model="permission.permissionValue" />
         </el-form-item>
-
+        <el-form-item label="功能图标">
+          <el-input v-model="permission.icon" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="restData()">取 消</el-button>
@@ -136,8 +101,10 @@ export default {
 
   data() {
     return {
-      filterText: '',
-      menuList: [],
+      flag: -1,
+      expandRow: [],
+      search: '',
+      tableData: [],
       defaultProps: {
         children: 'children',
         label: 'name'
@@ -148,39 +115,106 @@ export default {
       menu: menuForm,
       permission: perForm,
       menuValidateRules: {
-        name: [{required: true, trigger: 'blur', message: '菜单名必须输入'}],
-        path: [{required: true, trigger: 'blur', message: '菜单路径必须输入'}],
-        component: [{required: true, trigger: 'blur', message: '组件名称必须输入'}]
+        name: [{ required: true, trigger: 'blur', message: '菜单名必须输入' }],
+        path: [{ required: true, trigger: 'blur', message: '菜单路径必须输入' }],
+        component: [{ required: true, trigger: 'blur', message: '组件名称必须输入' }]
       },
       permissionValidateRules: {
-        name: [{required: true, trigger: 'blur', message: '功能名称必须输入'}],
-        permissionValue: [{required: true, trigger: 'blur', message: '功能权限值必须输入'}]
+        name: [{ required: true, trigger: 'blur', message: '功能名称必须输入' }],
+        permissionValue: [{ required: true, trigger: 'blur', message: '功能权限值必须输入' }]
       }
     }
   },
-  // 监听上面文本框搜索
-  watch: {
-    filterText(val) {
-      this.$refs.menuTree.filter(val)
-    }
-  },
+
 
   created() {
     this.fetchNodeList()
   },
 
+  computed: {
+    treeTable: function () {
+      var searchValue = this.search;
+      if (searchValue) {
+        // 一般表格的查询
+        // return  this.tableData.filter(function(dataNews){
+        //   return Object.keys(dataNews).some(function(key){
+        //     return String(dataNews[key]).toLowerCase().indexOf(search) > -1
+        //   })
+        // })
+        let treeData = this.tableData
+        let handleTreeData = this.handleTreeData(treeData, searchValue)
+        this.setExpandRow(handleTreeData)
+        this.expandRow = this.expandRow.join(",").split(",")
+        return handleTreeData
+      }
+      return this.tableData
+    }
+  },
   methods: {
+    // 将过滤好的树形数据展开
+    setExpandRow(handleTreeData) {
+      this.flag = -1
+      if (handleTreeData.length) {
+        for (let i of handleTreeData) {
+          this.expandRow.push(i.id)
+          if (i.children.length) {
+            this.setExpandRow(i.children)
+          }
+        }
+      }
+    },
+    //  树形表格过滤
+    handleTreeData(treeData, searchValue) {
+
+      if (!treeData || treeData.length === 0) {
+        return [];
+      }
+      const array = [];
+      for (let i = 0; i < treeData.length; i += 1) {
+        let match = false;
+        for (let pro in treeData[i]) {
+          if (typeof (treeData[i][pro]) == 'string') {
+            match |= treeData[i][pro].includes(searchValue);
+            if (match) break;
+          }
+        }
+        if (this.handleTreeData(treeData[i].children, searchValue).length > 0 || match) {
+          if (treeData[i].type == 0 && match) {
+            this.flag = 0
+            searchValue = ''
+            array.push({
+              ...treeData[i],
+              children: this.handleTreeData(treeData[i].children, searchValue),
+            });
+          } else if (treeData[i].type == 1 && match) {
+            if (this.flag == 0) {
+              this.flag = 1
+            }
+            searchValue = ''
+            array.push({
+              ...treeData[i],
+              children: this.handleTreeData(treeData[i].children, searchValue),
+            });
+            if (this.flag != 1) {
+              searchValue = this.search
+            }
+          } else {
+            array.push({
+              ...treeData[i],
+              children: this.handleTreeData(treeData[i].children, searchValue),
+            });
+          }
+        }
+      }
+      return array;
+    },
     fetchNodeList() {
       menu.getNestedTreeList().then(response => {
         if (response.success === true) {
-          this.menuList = response.data.items
-          console.log(this.menuList)
+          this.tableData = response.data.items
+          console.log(this.tableData)
         }
       })
-    },
-    filterNode(value, data) {
-      if (!value) return true
-      return data.title.toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
     remove(data) {
       console.log(data)
@@ -225,8 +259,8 @@ export default {
               })
               // 刷新页面
               this.fetchNodeList()
-              this.menu = {...menuForm}
-              this.permission = {...perForm}
+              this.menu = { ...menuForm }
+              this.permission = { ...perForm }
             })
           }
         }
@@ -242,18 +276,18 @@ export default {
           })
           // 刷新页面
           this.fetchNodeList()
-          this.menu = {...menuForm}
-          this.permission = {...perForm}
+          this.menu = { ...menuForm }
+          this.permission = { ...perForm }
         })
         .catch(response => {
-          // 你们写：判断点击取消清空一下
+          // 判断点击取消清空一下
           this.dialogFormVisible = false
           this.$message({
             type: 'error',
             message: '添加一级菜单失败'
           })
-          this.menu = {...menuForm}
-          this.permission = {...perForm}
+          this.menu = { ...menuForm }
+          this.permission = { ...perForm }
         })
     },
 
@@ -299,8 +333,8 @@ export default {
           // 3、刷新页面
           this.fetchNodeList()
           // 4、把menu清空
-          this.menu = {...menuForm}
-          this.permission = {...perForm}
+          this.menu = { ...menuForm }
+          this.permission = { ...perForm }
         })
         .catch(response => {
           // 1、把文本框关
@@ -311,8 +345,8 @@ export default {
             message: "添加二级分类失败"
           })
           // 3、把menu清空
-          this.menu = {...menuForm}
-          this.permission = {...perForm}
+          this.menu = { ...menuForm }
+          this.permission = { ...perForm }
 
         })
     },
@@ -327,8 +361,8 @@ export default {
     restData() {
       this.dialogPermissionVisible = false
       this.dialogFormVisible = false
-      this.menu = {...menuForm}
-      this.permission = {...perForm}
+      this.menu = { ...menuForm }
+      this.permission = { ...perForm }
     }
   }
 }

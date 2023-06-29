@@ -4,26 +4,15 @@
     <!-- 幻灯片 开始 -->
     <div v-swiper:mySwiper="swiperOption">
       <div class="swiper-wrapper">
-        <div
-          v-for="banner in bannerList"
-          :key="banner.id"
-          class="swiper-slide"
-          style="background: #040b1b"
-        >
-          <a target="_blank" :href="banner.linkUrl">
+        <div v-for="banner in bannerList" :key="banner.id" class="swiper-slide" style="background: #040b1b">
+          <a target="_blank" href="#">
             <img :src="banner.imageUrl" :alt="banner.title" />
           </a>
         </div>
       </div>
       <div class="swiper-pagination swiper-pagination-white"></div>
-      <div
-        class="swiper-button-prev swiper-button-white"
-        slot="button-prev"
-      ></div>
-      <div
-        class="swiper-button-next swiper-button-white"
-        slot="button-next"
-      ></div>
+      <div class="swiper-button-prev swiper-button-white" slot="button-prev"></div>
+      <div class="swiper-button-next swiper-button-white" slot="button-next"></div>
     </div>
     <!-- 幻灯片 结束 -->
     <!-- 幻灯片 结束 -->
@@ -42,31 +31,21 @@
                 <li v-for="course in courseList" :key="course.id">
                   <div class="cc-l-wrap">
                     <section class="course-img">
-                      <img
-                        :src="course.cover"
-                        class="img-responsive"
-                        :alt="course.title"
-                      />
+                      <img :src="course.cover" class="img-responsive" :alt="course.title" />
                       <div class="cc-mask">
-                        <a :href="'/course/' + course.id" title="开始学习" class="comm-btn c-btn-1" @click="toCourse(course.id)"
-                          >开始 学习</a
-                        >
+                        <a title="开始学习" class="comm-btn c-btn-1"
+                          @click="toCourse(course.id)">开始 学习</a>
                       </div>
                     </section>
                     <h3 class="hLh30 txtOf mt10">
-                      <a
-                        href="#"
-                        :title="course.title"
-                        class="course-title fsize18 c- 333"
-                        >{{ course.title }}</a
-                      >
+                      <a href="#" :title="course.title" class="course-title fsize18 c- 333">{{ course.title }}</a>
                     </h3>
                     <section class="mt10 hLh20 of">
-                      <span
-                        class="fr jgTag bg-green"
-                        v-if="Number(course.price) === 0"
-                      >
+                      <span class="fr jgTag bg-green" v-if="Number(course.price) === 0">
                         <i class="c-fff fsize12 f-fA">免费</i>
+                      </span>
+                      <span class="fr jgTag numPrice" v-else>
+                        {{ '¥' + course.price }}
                       </span>
                       <span class="fl jgAttr c-ccc f-fA">
                         <i class="c-999 f-fA">9634人学习</i>
@@ -97,29 +76,22 @@
           <div>
             <article class="i-teacher-list">
               <ul class="of">
-                <li v-for="teacher in teacherList" :key="teacher.id"> 
+                <li v-for="teacher in teacherList" :key="teacher.id">
                   <section class="i-teach-wrap">
                     <div class="i-teach-pic">
                       <a :href="'/teacher/' + teacher.id" :title="teacher.name">
-                        <img
-                          :alt="teacher.name"
-                          :src="teacher.avatar"
-                        />
+                        <img :alt="teacher.name" :src="teacher.avatar" />
                       </a>
                     </div>
                     <div class="mt10 hLh30 txtOf tac">
-                      <a :href="'/teacher/' + teacher.id" :title="teacher.name" class="fsize18 c-666"
-                        >{{teacher.name}}</a
-                      >
+                      <a :href="'/teacher/' + teacher.id" :title="teacher.name" class="fsize18 c-666">{{ teacher.name }}</a>
                     </div>
                     <div class="hLh30 txtOf tac">
-                      <span class="fsize14 c-999"
-                        >{{teacher.career}}</span
-                      >
+                      <span class="fsize14 c-999">{{ teacher.career }}</span>
                     </div>
                     <div class="mt15 i-q-txt">
                       <p class="c-999 f-fA">
-                        {{teacher.intro}}
+                        {{ teacher.intro }}
                       </p>
                     </div>
                   </section>
@@ -174,8 +146,11 @@ export default {
         this.teacherList = resp.data.data.teacherList;
       });
     },
-    toCourse(id){
-      this.$router.push({ path: "/course/" + id});
+    toCourse(id) {
+      this.$router.push({ path: "/course/" + id });
+    },
+    toTeacher(id) {
+      this.$router.push({ path: "/teacher/" + id });
     }
   },
   created() {
@@ -186,3 +161,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.numPrice {
+  color: #FF1B20;
+}
+</style>

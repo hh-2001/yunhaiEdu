@@ -3,19 +3,16 @@ package com.hhz.serviceedu.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.gson.JsonObject;
 import com.hhz.commonutils.R;
 import com.hhz.serviceedu.entity.EduCourse;
-import com.hhz.serviceedu.entity.EduTeacher;
 import com.hhz.serviceedu.entity.vo.CourseInfoVo;
 import com.hhz.serviceedu.entity.vo.CoursePublishVo;
 import com.hhz.serviceedu.entity.vo.CourseQuery;
-import com.hhz.serviceedu.entity.vo.TeacherQuery;
+import com.hhz.serviceedu.service.EduChapterService;
 import com.hhz.serviceedu.service.EduCourseService;
 import io.swagger.annotations.Api;
-import org.springframework.beans.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +34,12 @@ public class EduCourseController {
     @Autowired
     private EduCourseService courseService;
 
+    @Autowired
+    private EduChapterService chapterService;
+
     /**
      * 课程列表
+     *
      * @return
      */
     @GetMapping
@@ -49,6 +50,7 @@ public class EduCourseController {
 
     /**
      * 课程分页查询
+     *
      * @param current
      * @param limit
      * @param courseQuery
@@ -145,10 +147,13 @@ public class EduCourseController {
     @PostMapping("publishCourse/{id}")
     public R publishCourse(@PathVariable String id) {
         EduCourse eduCourse = new EduCourse();
-        eduCourse.setId(id);
-        eduCourse.setStatus("Normal");//设置课程发布状态
-        courseService.updateById(eduCourse);
-        return R.ok();
+        if (courseService.isOkPublic(id)) {
+            eduCourse.setId(id);
+            eduCourse.setStatus("Normal");//设置课程发布状态
+            courseService.updateById(eduCourse);
+            return R.ok();
+        }
+        return R.error();
     }
 
     /**
@@ -159,9 +164,8 @@ public class EduCourseController {
      */
     @DeleteMapping("removeCourseById/{courseId}")
     public R deleteCourse(@PathVariable String courseId) {
-       courseService.removeCourse(courseId);
+        courseService.removeCourse(courseId);
         return R.ok();
     }
-
 }
 

@@ -1,8 +1,11 @@
 package com.hhz.servicesecurity.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hhz.base.exceptionhandler.CaptchaException;
 import com.hhz.commonutils.R;
 import com.hhz.commonutils.ResponseUtil;
+import com.hhz.commonutils.StringUtils;
+import com.hhz.commonutils.constants.CacheConstants;
 import com.hhz.servicesecurity.entity.SecurityUser;
 import com.hhz.servicesecurity.entity.User;
 import com.hhz.servicesecurity.security.TokenManager;
@@ -46,6 +49,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
             throws AuthenticationException {
         try {
             User user = new ObjectMapper().readValue(req.getInputStream(), User.class);
+            codeCheck(user);
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), new ArrayList<>()));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -85,4 +89,31 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
                                               AuthenticationException e) throws IOException, ServletException {
         ResponseUtil.out(response, R.error());
     }
+
+    /**
+     * 验证码处理
+     * @param user
+     */
+    private void codeCheck(User user) {
+        String code = user.getCode();
+        String uuid = user.getUuid();
+        //判断验证码状态
+        if (StringUtils.isEmpty(code)) {
+            throw new CaptchaException("验证码不能为空");
+        }
+        if (StringUtils.isEmpty(uuid)) {
+            throw new CaptchaException("验证码已失效");
+        }
+        //构建redis缓存键
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
+        String captcha = redisTemplate.opsForValue().get(verifyKey).toString();
+        if (StringUtils.isNull(captcha)){
+            throw new CaptchaException("验证码已过期");
+        }
+        if (!code.equalsIgnoreCase(captcha)) {
+            throw new CaptchaException("验证码错误");
+        }
+        redisTemplate.delete(verifyKey);
+    }
+
 }

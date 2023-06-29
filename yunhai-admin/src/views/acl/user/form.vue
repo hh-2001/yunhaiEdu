@@ -2,16 +2,22 @@
   <div class="app-container">
     <el-form ref="user" :model="user" :rules="validateRules" label-width="120px">
       <el-form-item label="用户名" prop="username">
-        <el-input v-model="user.username"/>
+        <el-input v-model="user.username" />
       </el-form-item>
       <el-form-item label="用户昵称">
-        <el-input v-model="user.nickName"/>
-      </el-form-item>
-     
-      <el-form-item v-if="!user.id" label="用户密码" prop="password">
-        <el-input v-model="user.password"/>
+        <el-input v-model="user.nickName" />
       </el-form-item>
 
+      <el-form-item v-if="!user.id" label="用户密码" prop="password">
+        <el-input v-model="user.password" />
+      </el-form-item>
+
+      <el-form-item label="头像">
+        <el-upload :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"
+          :action="BASE_API + '/eduoss/fileoss/upload'" class="avatar-uploader">
+          <img :src="user.avatar" />
+        </el-upload>
+      </el-form-item>
 
       <el-form-item>
         <el-button :disabled="saveBtnDisabled" type="primary" @click="saveOrUpdate">保存</el-button>
@@ -27,7 +33,8 @@ import userApi from '@/api/acl/user'
 const defaultForm = {
   username: '',
   nickName: '',
-  password: ''
+  password: '',
+  avatar:''
 }
 
 const validatePass = (rule, value, callback) => {
@@ -41,6 +48,7 @@ const validatePass = (rule, value, callback) => {
 export default {
   data() {
     return {
+      BASE_API: process.env.BASE_API, // 接口API地址
       user: defaultForm,
       saveBtnDisabled: false, // 保存按钮是否禁用,
       validateRules: {
@@ -92,7 +100,22 @@ export default {
         }
       })
     },
-
+    //上传封面成功调用的方法
+    handleAvatarSuccess(resp, file) {
+      this.user.avatar = resp.data.url;
+    },
+    //上传之前要调用的方法
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
     // 新增讲师
     saveData() {
       userApi.save(this.user).then(response => {
@@ -132,3 +155,9 @@ export default {
   }
 }
 </script>
+<style>
+.avatar-uploader img{
+  width: 300px;
+  height: 300px;
+}
+</style>

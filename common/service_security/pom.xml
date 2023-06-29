@@ -23,6 +23,11 @@
             <artifactId>common_utils</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.hhz</groupId>
+            <artifactId>base</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!-- Spring Security依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

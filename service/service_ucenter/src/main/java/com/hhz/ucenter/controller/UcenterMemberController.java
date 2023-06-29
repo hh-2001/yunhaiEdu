@@ -103,7 +103,7 @@ public class UcenterMemberController {
     }
 
     @PutMapping("{oldPassword}")
-    public R updateMember(HttpServletRequest request, @RequestBody UcenterMember member, @PathVariable("oldPassword") String oldPassword){
+    public R updateMember(HttpServletRequest request, @RequestBody UcenterMember member, @PathVariable(value = "oldPassword",required = false) String oldPassword){
         String memberId = JwtUtils.getMemberIdByJwtToken(request);
         member.setId(memberId);
         System.out.println(member);

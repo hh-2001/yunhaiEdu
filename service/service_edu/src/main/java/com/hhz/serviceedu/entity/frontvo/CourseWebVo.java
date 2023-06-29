@@ -32,7 +32,7 @@ public class CourseWebVo {
     private String description;
 
     @ApiModelProperty(value = "讲师ID")
-    private String teacherId;
+    private String ownerId;
 
     @ApiModelProperty(value = "讲师姓名")
     private String teacherName;
@@ -54,4 +54,7 @@ public class CourseWebVo {
 
     @ApiModelProperty(value = "类别二级名称")
     private String subjectLevelTwo;
+
+    @ApiModelProperty("最近更新时间")
+    private String gmtModified;
 }

@@ -159,6 +159,9 @@ export default {
       this.$refs.userForm.validateField("phone", (errMsg) => {
         if (errMsg == "") {
           registerApi.getPhone(this.params.phone).then((res) => {
+            if(res.success){
+              this.$message = "发送成功"
+            }
             this.sending = false;
             this.timeDown();
           });

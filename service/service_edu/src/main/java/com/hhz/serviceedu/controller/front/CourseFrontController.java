@@ -7,6 +7,7 @@ import com.hhz.serviceedu.client.OrdersClient;
 import com.hhz.serviceedu.entity.EduCourse;
 import com.hhz.serviceedu.entity.EduCourseCollect;
 import com.hhz.serviceedu.entity.chapter.ChapterVo;
+import com.hhz.serviceedu.entity.es.EsCourseInfo;
 import com.hhz.serviceedu.entity.frontvo.CourseCollectVo;
 import com.hhz.serviceedu.entity.frontvo.CourseFrontVo;
 import com.hhz.serviceedu.entity.frontvo.CourseWebVo;
@@ -45,6 +46,14 @@ public class CourseFrontController {
         return R.ok().data(map);
     }
 
+    //分页查询课程
+    @GetMapping("getPageList/{page}/{limit}")
+    public R getPageList(@PathVariable long page, @PathVariable long limit) {
+        Page<EduCourse> pageCourse = new Page<>(page,limit);
+        List<EsCourseInfo> list = courseService.getCourseFrontListByTeacher(pageCourse);
+        return R.ok().data("items",list);
+    }
+
     //2 课程详情的方法
     @GetMapping("getFrontCourseInfo/{courseId}")
     public R getFrontCourseInfo(@PathVariable String courseId, HttpServletRequest request) {
@@ -54,10 +63,12 @@ public class CourseFrontController {
         List<ChapterVo> chapterVideoList = chapterService.getChapterVideoByCourseId(courseId);
         //根据课程id和用户id查询当前课程是否已经支付过了
         boolean buyCourse = false;
+        boolean isCollect = false;
         if (!StringUtils.isEmpty(JwtUtils.getMemberIdByJwtToken(request))){
+            isCollect = courseService.checkCollect(courseId, JwtUtils.getMemberIdByJwtToken(request));
             buyCourse = ordersClient.isBuyCourse(courseId, JwtUtils.getMemberIdByJwtToken(request));
         }
-        return R.ok().data("item",courseWebVo).data("items",chapterVideoList).data("isBuy",buyCourse);
+        return R.ok().data("item",courseWebVo).data("items",chapterVideoList).data("isBuy",buyCourse).data("isCollect", isCollect);
     }
 
     //根据课程id查询课程信息
@@ -77,7 +88,18 @@ public class CourseFrontController {
         if (aBoolean){
             return R.ok();
         }
-        return R.error();
+        return R.error().code(20002);
+    }
+
+    //收藏课程
+    @GetMapping("deleteCollect/{courseId}")
+    public R deleteCollect(@PathVariable String courseId, HttpServletRequest request){
+        String memberId = JwtUtils.getMemberIdByJwtToken(request);
+        Boolean aBoolean = courseService.deleteCollect(new EduCourseCollect(courseId,memberId));
+        if (aBoolean){
+            return R.ok();
+        }
+        return R.error().code(20002);
     }
 
     @GetMapping("getCourseCollect")

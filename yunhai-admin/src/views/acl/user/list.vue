@@ -13,7 +13,7 @@
 
     <!-- 工具条 -->
     <div>
-      <el-button type="danger" size="mini" @click="addUser()" v-if="hasPerm('user.add')">添加</el-button>
+      <el-button type="primary" size="mini" @click="addUser()" v-if="hasPerm('user.add')">添加</el-button>
       <el-button type="danger" size="mini" @click="removeRows()" v-if="hasPerm('user.remove')">批量删除</el-button>
 
     </div>

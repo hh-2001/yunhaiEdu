@@ -2,6 +2,9 @@ package com.hhz.serviceedu.entity.vo;
 
 import lombok.Data;
 
+/**
+ *
+ */
 @Data
 public class CoursePublishVo {
     private String id;

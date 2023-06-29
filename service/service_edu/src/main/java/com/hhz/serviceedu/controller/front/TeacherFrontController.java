@@ -44,7 +44,7 @@ public class TeacherFrontController {
         EduTeacher eduTeacher = teacherService.getById(teacherId);
         //2 根据讲师id查询所讲课程
         QueryWrapper<EduCourse> wrapper = new QueryWrapper<>();
-        wrapper.eq("teacher_id", teacherId);
+        wrapper.eq("owner_id", teacherId);
         List<EduCourse> courseList = courseService.list(wrapper);
         return R.ok().data("item", eduTeacher).data("items", courseList);
     }

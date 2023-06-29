@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -92,5 +94,18 @@ public class EduSubjectServiceImpl extends ServiceImpl<EduSubjectMapper, EduSubj
             oneSubject.setChildren(twoFinalSubjectList);
         }
         return finalSubjectList;
+    }
+
+    @Override
+    public List<Map<String, String>> makeChart() {
+        List<OneSubject> allOneTwoSubject = getAllOneTwoSubject();
+        List<Map<String,String>> list = new ArrayList<>();
+        for (OneSubject subject : allOneTwoSubject) {
+            Map<String, String> map = new HashMap<>();
+            map.put("value", "1");
+            map.put("name", subject.getTitle());
+            list.add(map);
+        }
+        return list;
     }
 }

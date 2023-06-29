@@ -15,9 +15,7 @@
             </el-table-column>
             <el-table-column>
                 <template slot-scope="scope">
-                    <router-link :to="'/course/' + scope.row.courseId">
-                        <el-button type="primary" size="mini" icon="el-icon-edit">继续学习</el-button>
-                    </router-link>
+                    <el-button type="primary" size="mini" icon="el-icon-edit" @click="toCourse(scope.row.courseId)">继续学习</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -44,6 +42,14 @@ export default {
                 this.courseList = resp.data.data.items
             })
         },
+        toCourse(id) {
+            this.$router.push({
+                name: 'course-id',
+                params: {
+                    id: id
+                }
+            })
+        }
     },
     created() {
         this.getCourseCollect()

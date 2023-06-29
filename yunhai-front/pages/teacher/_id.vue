@@ -15,16 +15,16 @@
               <img :src="teacher.avatar" />
             </section>
             <h3 class="hLh30">
-              <span class="fsize24 c-333">{{teacher.name}}&nbsp;
-                {{teacher.career}}
+              <span class="fsize24 c-333">{{ teacher.name }}&nbsp;
+                {{ teacher.career }}
               </span>
             </h3>
             <section class="mt10">
-              <span class="t-tag-bg">{{teacher.career}}</span>
+              <span class="t-tag-bg">{{ teacher.career }}</span>
             </section>
             <section class="t-infor-txt">
               <p class="mt20">
-                {{teacher.intro}}
+                {{ teacher.intro }}
               </p>
             </section>
             <div class="clear"></div>
@@ -33,7 +33,7 @@
         <div class="clear"></div>
       </div>
       <section class="mt30">
-        
+
         <div>
           <header class="comm-title all-teacher-title c-course-content">
             <h2 class="fl tac">
@@ -44,47 +44,43 @@
             </section>
           </header>
           <!-- /无数据提示 开始-->
-          <section class="no-data-wrap" v-if="courseList.length==0">
+          <section class="no-data-wrap" v-if="courseList.length == 0">
             <em class="icon30 no-data-ico">&nbsp;</em>
-            <span class="c-666 fsize14 ml10 vam"
-              >没有相关数据，小编正在努力整理 中...</span
-            >
+            <span class="c-666 fsize14 ml10 vam">没有相关数据，小编正在努力整理 中...</span>
           </section>
           <!-- /无数据提示 结束-->
           <article class="comm-course-list">
-            <ul class="of">
-              <li v-for="course in courseList" :key="course.id">
-                <div class="cc-l-wrap">
-                  <section class="course-img">
-                    <img
-                      :src="course.cover"
-                      class="img-responsive"
-                    />
-                    <div class="cc-mask">
-                      <a
-                        :href="'/course/'+course.id"
-                        title="开始学习"
-                        target="_blank"
-                        class="comm- btn c-btn-1"
-                        >开始学习</a
-                      >
-                    </div>
-                  </section>
-                  <h3 class="hLh30 txtOf mt10">
-                    <a
-                      :href="'/course/'+course.id"
-                      :title="course.title"
-                      target="_blank"
-                      class="course-title fsize18 c-333"
-                      >{{course.title}}</a
-                    >
-                  </h3>
-                </div>
-              </li>
-            
-            </ul>
-            <div class="clear"></div>
-          </article>
+              <ul class="of" id="bna">
+                <li v-for="course in courseList" :key="course.id">
+                  <div class="cc-l-wrap">
+                    <section class="course-img">
+                      <img :src="course.cover" class="img-responsive" :alt="course.title" />
+                      <div class="cc-mask">
+                        <a :href="'/course/' + course.id" title="开始学习" class="comm-btn c-btn-1"
+                          @click="toCourse(course.id)">开始 学习</a>
+                      </div>
+                    </section>
+                    <h3 class="hLh30 txtOf mt10">
+                      <a href="#" :title="course.title" class="course-title fsize18 c- 333">{{ course.title }}</a>
+                    </h3>
+                    <section class="mt10 hLh20 of">
+                      <span class="fr jgTag bg-green" v-if="Number(course.price) === 0">
+                        <i class="c-fff fsize12 f-fA">免费</i>
+                      </span>
+                      <span class="fr jgTag numPrice" v-else>
+                        {{ '¥' + course.price }}
+                      </span>
+                      <span class="fl jgAttr c-ccc f-fA">
+                        <i class="c-999 f-fA">9634人学习</i>
+                        |
+                        <i class="c-999 f-fA">9634评论</i>
+                      </span>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+              <div class="clear"></div>
+            </article>
         </div>
       </section>
     </section>
@@ -100,22 +96,30 @@ export default {
   },
   data() {
     return {
-      teacher:{
-        name:'',
-        intro:'',
-        career:'',
-        level:'',
+      teacher: {
+        name: '',
+        intro: '',
+        career: '',
+        level: '',
       },
-      courseList:[],
-      teacherId:'',
-      
+      courseList: [],
+      teacherId: '',
+
     }
   },
   methods: {
-    getByid(){
-      teacherApi.getTeacherInfoByid(this.teacherId).then(resp=>{
-          this.teacher = resp.data.data.item
-          this.courseList = resp.data.data.items
+    getByid() {
+      teacherApi.getTeacherInfoByid(this.teacherId).then(resp => {
+        this.teacher = resp.data.data.item
+        this.courseList = resp.data.data.items
+      })
+    },
+    toCourse(id) {
+      this.$router.push({
+        name: 'course-id',
+        params: {
+          id: id
+        }
       })
     }
   },

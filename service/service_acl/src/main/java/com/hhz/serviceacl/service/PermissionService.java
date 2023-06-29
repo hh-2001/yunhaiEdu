@@ -31,6 +31,7 @@ public interface PermissionService extends IService<Permission> {
     //根据用户id获取用户菜单
     List<String> selectPermissionValueByUserId(String id);
 
+    //根据用户id获取菜单
     List<JSONObject> selectPermissionByUserId(String id);
 
     //获取全部菜单

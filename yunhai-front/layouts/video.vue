@@ -9,7 +9,6 @@
   </div>
 </template>
 <script>
-import courseApi from "@/api/course";
 export default {
 }
 </script>

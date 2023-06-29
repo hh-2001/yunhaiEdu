@@ -5,12 +5,15 @@ import com.aliyun.vod.upload.req.UploadStreamRequest;
 import com.aliyun.vod.upload.resp.UploadStreamResponse;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.vod.model.v20170321.DeleteVideoRequest;
+import com.aliyuncs.vod.model.v20170321.GetPlayInfoResponse;
 import com.hhz.base.exceptionhandler.EduException;
 import com.hhz.commonutils.R;
 import com.hhz.vod.Utils.ConstantVodUtils;
 import com.hhz.vod.Utils.InitVodCilent;
+import com.hhz.vod.pojo.VideoVo;
 import com.hhz.vod.service.VodService;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,5 +78,17 @@ public class VodServiceImpl implements VodService {
             e.printStackTrace();
             throw new EduException(20001,"删除视频失败");
         }
+    }
+
+    @Override
+    public VideoVo getVideoVo(GetPlayInfoResponse response) {
+        VideoVo videoVo = new VideoVo();
+        List<GetPlayInfoResponse.PlayInfo> playInfoList = response.getPlayInfoList();
+        GetPlayInfoResponse.PlayInfo playInfo = playInfoList.get(0);
+        GetPlayInfoResponse.VideoBase videoBase = response.getVideoBase();
+        BeanUtils.copyProperties(videoBase, videoVo);
+        BeanUtils.copyProperties(playInfo, videoVo);
+
+        return videoVo;
     }
 }

@@ -64,12 +64,13 @@ public class SearchServiceImpl implements SearchService {
             List<EsCourseInfo> list1 = new ArrayList<>();
 
             for (EduCourse eduCourse : list) {
-                EduTeacher teacher = eduTeacherService.getById(eduCourse.getTeacherId());
+                EduTeacher teacher = eduTeacherService.getById(eduCourse.getOwnerId());
                 EsCourseInfo esCourseInfo = new EsCourseInfo();
                 esCourseInfo.setCover(eduCourse.getCover());
                 esCourseInfo.setId(eduCourse.getId());
                 esCourseInfo.setTitle(eduCourse.getTitle());
                 esCourseInfo.setIntro(teacher.getIntro());
+                esCourseInfo.setAvatar(teacher.getAvatar());
                 esCourseInfo.setTeacherName(teacher.getName());
                 esCourseInfo.setPrice(eduCourse.getPrice());
                 list1.add(esCourseInfo);
@@ -123,7 +124,6 @@ public class SearchServiceImpl implements SearchService {
         for (SearchHit hit : searchResponse.getHits()) {
             list.add(hit.getSourceAsMap());
         }
-        System.out.println(list.size());
         return list;
     }
 

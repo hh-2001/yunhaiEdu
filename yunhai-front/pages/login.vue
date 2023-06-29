@@ -101,7 +101,6 @@ export default {
           //登录成功根据token获取用户信息
           loginApi.getLoginInfo().then((response) => {
             this.loginInfo = response.data.data.item;
-            console.log(this.loginInfo)
             //将用户信息记录cookie
             cookie.set("yunhai_ucenter", this.loginInfo, { domain: "localhost" });
             //跳转页面

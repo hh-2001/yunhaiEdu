@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :span="6" :xs="24">
+      <el-col :span="6" :xs="24" class="sync-height">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>个人信息</span>
@@ -32,7 +32,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="18" :xs="24">
+      <el-col :span="18" :xs="24" class="sync-height">
         <el-card>
           <div slot="header" class="clearfix">
             <span>基本资料</span>
@@ -50,6 +50,9 @@
             <el-tab-pane label="订单信息" name="orderDeatil">
               <orderDeatil :ucenter="ucenter" />
             </el-tab-pane>
+            <el-tab-pane label="发布课程" name="publicCourse">
+              <publicCourse :ucenter="ucenter" />
+            </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
@@ -64,10 +67,11 @@ import rePass from "./rePass.vue";
 import info from "./info.vue";
 import collect from "./collect.vue";
 import orderDeatil from "./orderDetail.vue";
+import publicCourse from "./publicCourse.vue"
 
 export default {
   name: "Profile",
-  components: { avatar, rePass, info, collect, orderDeatil },
+  components: { avatar, rePass, info, collect, orderDeatil ,publicCourse },
   data() {
     return {
       ucenter: {},
@@ -138,5 +142,10 @@ export default {
   color: #303133;
   -webkit-transition: 0.3s;
   transition: 0.3s;
+}
+.sync-height {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 </style>

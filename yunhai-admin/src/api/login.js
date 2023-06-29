@@ -1,15 +1,12 @@
 import request from '@/utils/request'
 
 // 登录
-export function login(username, password) {
+export function login(user) {
  // debugger
   return request({
     url: '/admin/acl/login',
     method: 'post',
-    data: {
-      username,
-      password
-    }
+    data: user
   })
 }
 
@@ -46,5 +43,13 @@ export function getMenu() {
   return request({
     url: '/admin/acl/index/menu',
     method: 'get'
+  })
+}
+// 获取验证码
+export function getCodeImg() {
+  return request({
+    url: '/admin/acl/index/code',
+    method: 'get',
+    timeout: 20000
   })
 }

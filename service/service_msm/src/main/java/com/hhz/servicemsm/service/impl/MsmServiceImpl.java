@@ -52,11 +52,10 @@ public class MsmServiceImpl implements MsmService {
         request.putQueryParameter("TemplateCode", templateCode); //申请阿里云 模板code
         request.putQueryParameter("TemplateParam", JSONObject.toJSONString(param)); //验证码数据，转换json数据传递
 
-        System.out.println("执行到这:" + signName);
-
         try {
             //最终发送
             CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getHttpResponse().getStatus());
             boolean success = response.getHttpResponse().isSuccess();
             System.out.println("结果："+success);
             return success;
@@ -64,6 +63,5 @@ public class MsmServiceImpl implements MsmService {
             e.printStackTrace();
             return false;
         }
-
     }
 }

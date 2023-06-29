@@ -3,6 +3,7 @@ package com.hhz.serviceedu.service;
 import com.hhz.serviceedu.controller.front.CourseFrontController;
 import com.hhz.serviceedu.entity.EduCourse;
 import com.hhz.serviceedu.entity.EduCourseCollect;
+import com.hhz.serviceedu.entity.es.EsCourseInfo;
 import com.hhz.serviceedu.entity.frontvo.CourseCollectVo;
 import com.hhz.serviceedu.entity.frontvo.CourseFrontVo;
 import com.hhz.serviceedu.entity.frontvo.CourseWebVo;
@@ -42,12 +43,24 @@ public interface EduCourseService extends IService<EduCourse> {
     //1 条件查询带分页查询课程前台
     Map<String, Object> getCourseFrontList(Page<EduCourse> pageCourse, CourseFrontVo courseFrontVo);
 
+    //查询所有课程信息
+    List<EsCourseInfo> getCourseFrontListByTeacher(Page<EduCourse> pageCourse);
+
     //根据课程id，编写sql语句查询课程信息
     CourseWebVo getBaseCourseInfo(String courseId);
 
     //收藏课程
     Boolean saveCollect(EduCourseCollect courseCollect);
 
+    //移除收藏
+    Boolean deleteCollect(EduCourseCollect courseCollect);
+
     //获取对应会员收藏的课程
     List<CourseCollectVo> getCourseCollect(String memberId);
+
+    //判断是否有条件发布课程
+    boolean isOkPublic(String id);
+
+    //判断是否收藏
+    boolean checkCollect(String courseId, String memberId);
 }
