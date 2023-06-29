@@ -1,4 +1,4 @@
-# 云海在线平台
+# 云海在线教育平台
 
 ### 开发环境:
 
@@ -9,7 +9,7 @@
 | node               | 16.20.0        |
 | npm                | 6.14.12        |
 
-数据库文件: 在common/sql/src/main/java/com/hhz/sql/all
+数据库文件路径: common/sql/src/main/java/com/hhz/sql/all
 
 ### 启动流程
 
@@ -82,5 +82,5 @@ app:
 
 | <img src="mdImage\app-首页.png" alt="app-首页" style="zoom:50%;" /> | <img src="mdImage\app-课程详情.png" alt="app-课程详情" style="zoom:50%;" /> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="D:\Users\Desktop\pdf\yunhai-edu\mdImage\app-搜索.png" alt="app-搜索" style="zoom:50%;" /> | <img src="D:\Users\Desktop\pdf\yunhai-edu\mdImage\app-视频播放.png" alt="app-视频播放" style="zoom:50%;" /> |
+| <img src="mdImage\app-搜索.png" alt="app-搜索" style="zoom:50%;" /> | <img src="mdImage\app-视频播放.png" alt="app-视频播放" style="zoom:50%;" /> |
 
